@@ -45,6 +45,10 @@ pub enum Status {
 
     /// Refunded Funds were refunded back to the customer.
     Refunded,
+
+    ///Pending 3DS , means card holder is required to complete 3ds Secure payments challenge 
+    /// if using VISA / Mastercard
+    Pending3ds,
 }
 
 /// Passenger Types for Passenger Ticket Transaction
@@ -72,6 +76,8 @@ pub enum PaymentMethod {
     MobileMoney(Mno),
     // Visa / MasterCard
     Vmc(CardIssuer),
+    All,
+
 }
 
 #[derive(Clone, Debug, Serialize, Deserialize, PartialEq)]
@@ -118,9 +124,79 @@ pub struct Card {
 #[derive( Debug, Serialize, Deserialize, PartialEq)]
 pub struct Paynow {
     /* Merchant's endpoints. */
-    integration_id: &'static str, 
+    pub integration_id: &'static str, 
+    pub integration_key: &'static str,
     pub return_url: &'static str,
     pub result_url: &'static str, 
+    pub tokenize: bool,
+}
+
+
+impl Paynow {
+    // Constructor
+    pub fn new(integration_id: &'static str, integration_key: &'static str) -> Paynow {
+        // return url and result are optional and can be changed later, so we can initialise to empty strings 
+        Paynow {integration_id, integration_key, return_url: "", result_url: "", tokenize: false}
+    }
+
+    /// Create Payment 
+    pub fn create_payment(&mut self, reference: &'static str) -> Payment {
+        // initialise payment
+        // The unique transaction reference is a mandatory requirement
+        // eg  create payment for "invoice 267"
+        // all other fields initialized to nothingness!!
+    
+        let cart: HashMap<String, isize> = HashMap::new();
+        let email = String::new();
+        Payment {
+            reference: reference.to_string(),
+            items: cart,
+            auth_email: email,
+            additionalinfo: String::new(),
+            payment_method: PaymentMethod::All,
+            total: 0isize,
+        } 
+    }
+
+    // TODO initiate transaction request
+    pub fn init_transaction(self, payment: &mut Payment) -> &'static str {
+        // URL encoded HTTP request to be returned 
+
+        // get Payment total before posting
+        payment.get_total();
+        let transaction_post: HashMap<&'static str, String> = HashMap::with_capacity(8);
+        transaction_post.insert("id", self.integration_id.to_string());
+        transaction_post.insert("reference", payment.reference);
+        //TODO create field in payment type
+        // transaction_post.insert("amount", payment.total);
+        transaction_post.insert("additionalinfo", payment.additionalinfo);
+        transaction_post.insert("returnurl", self.return_url.to_owned());
+        transaction_post.insert("resulturl", self.result_url.to_owned());
+        transaction_post.insert("authemail", payment.auth_email);
+        // Only when merchant permitted 
+        if self.tokenize {
+            transaction_post.insert("tokenize", "True".to_owned());
+        } 
+        transaction_post.insert("status", "Message".to_owned());
+        //TODO write hash generator helper for this
+        transaction_post.insert("hash", "RANDOM&FAKEHASH#$%@^$%^9000000909453SD".to_owned());
+        // TODO next is seriaize and url encode this hashmap
+        // Ehmm but whats the order of fields??
+
+
+        "Status=Ok&BrowserUrl=http%3a%2f%2fwwwADEDBDE788862032F1BD82CF3B92DE5D5B40DBB35F1A4FD7D"
+    }
+
+    //TODO inititiate express checkout transaction
+    pub fn init_express_checkout_transaction(self, ) -> () {
+        // write something when your brain is freed.
+    }
+
+    //TODO initiate passenger ticket transaction
+    pub fn init_passenger_ticket_transaction(self, ) -> () {
+        //"url endoded http req"
+
+    } 
 }
 
 
@@ -128,9 +204,11 @@ pub struct Paynow {
 #[derive(Clone, Debug, Serialize, Deserialize, PartialEq)]
 pub struct Payment {
     pub reference: String, // unique identifier for transaction
-    pub items: HashMap<String, String>,  // Dictionary of items in shopping cart
+    pub items: HashMap<String, isize>,  // Dictionary of items in shopping cart description and amountjjj
     pub auth_email: String, // Users email address
+    pub additionalinfo: String,
     pub payment_method: PaymentMethod,
+    pub total: isize,
 }
 
 
@@ -139,25 +217,23 @@ pub struct Payment {
 
 impl Payment {
 
-    pub fn new(reference: String, items: HashMap<String, String>, auth_email: String, payment_method: PaymentMethod) -> Payment {
-        Payment {reference, items, auth_email, payment_method}
+    pub fn add(self, item: &'static str, amount: isize) {
+        //TODO iterate cart and get total amount
+        self.items.insert(item.to_owned(), amount);
     }
 
-    // TODO initiate transaction request
-    pub fn init_transaction(self, config: HashMap<String, String>) -> () {
-        // learn about sending HHTP request , url encoded
-        // 
+    // remove from cart
+    pub fn remove(self, item: &'static str) {
+        self.items.remove(item);
     }
 
-    //TODO inititiate express checkout transaction
-    pub fn init_express_checkout_transaction(self, config: HashMap<String, String>) -> () {
-        // write something when your brain is freed.
-    }
+    // Payment Total
+    fn get_total(self) {
+        // iterate over cart and update total field
 
-    //TODO initiate passenger ticket transaction
-    pub fn init_passenger_ticket_transaction(self, config: HashMap<String, String>) -> () {
-        //"url endoded http req"
-
+        for i in self.items.values() {
+            self.total += i;
+        }
     } 
 }
 

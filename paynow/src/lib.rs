@@ -4,13 +4,8 @@
 
 // Paynow Rust Client
 mod paynow_types;
-mod transactions;
 
-use paynow_types::URL_INITIATE_TRANSACTION;
-
-
-
-
+// client here.....
 
 #[cfg(test)]
 mod tests {
