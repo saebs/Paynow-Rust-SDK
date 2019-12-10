@@ -3,7 +3,8 @@
 // email: sabelo.n@yandex.com
 
 // Paynow Rust Client
-mod paynow_types;
+mod pn;
+mod constants;
 
 // client here.....
 
