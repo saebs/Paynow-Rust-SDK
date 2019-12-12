@@ -92,25 +92,25 @@ pub struct Card {
     // Numeric	The Visa/Mastercard PAN
     cardnumber: usize,
     // Name printed on front of card
-    pub cardname: String,
+    cardname: String,
     // Numeric	3 or 4 digits from rear of card
-    pub cardcvv: u16,
+    cardcvv: u16,
 	// Numeric	6 digit card expiry date (MMYYYY) e.g. 052018
-    pub cardexpiry: u32,
+    cardexpiry: u32,
     // String	Customer’s billing address
-    pub billingline1: String,
+    billingline1: String,
     // String	Not required but will assist with fraud detection
-    pub billingline2: String,
+    billingline2: String,
     // String	Customer’s billing address city
-    pub billingcity: String,
+    billingcity: String,
     // String	Not required but will assist with fraud detection
-    pub billingprovince: String,
+    billingprovince: String,
     // String	Customer’s billing address country
-    pub billingcountry:  String,
+    billingcountry:  String,
 }
 
 /// Paynow type for interacting with paynow api
-#[derive( Debug, Serialize, Deserialize, PartialEq)]
+#[derive( Debug, Copy, Serialize, Deserialize, PartialEq)]
 pub struct Paynow {
     integration_id: &'static str, 
     integration_key: &'static str,
@@ -124,32 +124,112 @@ pub struct Paynow {
 
 impl Paynow {
     // Constructor
-    pub fn new(integration_id: &'static str, integration_key: &'static str) -> Paynow {
+    pub fn new(integration_id: &'static str, integration_key: &'static str) -> Result<Paynow, ()> {
         // return url and result are optional and can be changed later, so we can initialise to empty strings 
-        Paynow {integration_id, integration_key, returnurl: "", resulturl: "", tokenize: false}
+        let paynow = Paynow {integration_id, integration_key, returnurl: "", resulturl: "", tokenize: false};
+        Ok(paynow)
+    }
+
+    /// Create Paynow instance from other Data sources eg dictionary, text file maybe? or JSON i dont know
+    /// but it will work simple!!
+    /// check the helpers module
+    fn from<T>(source: T) -> Result<Paynow, ()>{
+        // TODO Fix this nonsense before production use,
+        // infact thats why its private for now
+        let paynow = Paynow {integration_id: "kung", integration_key: "foo", returnurl: "", resulturl: "", tokenize: false};
+        Ok(paynow)
     }
 
     /// Create Payment 
-    pub fn create_payment(&mut self, reference: &'static str, auth_email: &'static str) -> Payment {
+    pub fn create_payment(&mut self, reference: &'static str, auth_email: &'static str) -> Result<Payment, ()> {
         // initialise payment
         // The unique transaction reference is a mandatory requirement
         // eg  create payment for "invoice 267"
-        // all other fields initialized to nothingness!!
+        // all other fields initialized to nada!!
     
         let cart: HashMap<String, isize> = HashMap::new();
 
-        Payment {
+        let payment = Payment {
             reference: reference.to_string(),
             items: cart,
             auth_email: auth_email.to_owned(),
             additionalinfo: String::new(),
             payment_method: PaymentMethod::All,
             amount: 0isize,
-        }
+        };
+        Ok(payment)
     }
-    /// Send and SendMobile helper
-    /// build a minimal transaction template
-    fn pre_build_transaction(&mut self) -> HashMap<&'static str, String> {
+
+    // TODO initiate transaction request
+    /// Send invokes the Initiate Transaction request to Paynow
+    pub fn send(&self, payment: &mut Payment) -> Result<&'static str, &'static str> {
+        // URL encoded HTTP request to be returned 
+    
+        // get Payment amount before posting
+        let transaction: HashMap<&'static str, String> = self.build();
+        transaction.insert(REFERENCE, payment.reference);
+        payment.sum(); 
+        transaction.insert(AMOUNT, payment.amount.to_string());
+        //optional field
+        transaction.insert(ADDITIONAlINFO, payment.additionalinfo);
+        // auth email field is optional for non mobile payments
+        transaction.insert(AUTHEMAIL, payment.auth_email);
+        /* Only when merchant is registered to tokenize payments should field be included
+         in transaction, there is an email to find out how, but Im not gonna put it here
+         go read the official Paynow docs 
+        */
+        // TODO iterate over the dictionary, concatenate pairs and serialize to a string
+        // 
+        transaction.insert(HASH, "RANDOM&FAKEHASH#$%@^$%^9000000909453SD".to_owned());
+        // T
+        // Ehmm but whats the order of fields??
+
+
+        Ok("Status=Ok&BrowserUrl=http%3a%2f%2fwwwADEDBDE788862032F1BD82CF3B92DE5D5B40DBB35F1A4FD7D")
+    }
+
+    //TODO inititiate express checkout transaction
+    /// Send Mobile version transactin , requires email
+    pub fn send_mobile(&mut self, payment: &mut Payment, phone: &'static str, method: PaymentMethod) -> Result<HashMap<&'static str, String>, &'static str> {
+        // If auth_email does not exist , Throw A tantrum.
+        let transaction: HashMap<&'static str, String> = self.build();
+        transaction.insert(PHONE, phone.to_owned());
+        let method: String = match method {
+            PaymentMethod::Ecocash => String::from("ecocash"),
+            PaymentMethod::OneMoney => String::from("onemoney"),
+            PaymentMethod::Telecash => String::from("telecash"),
+            PaymentMethod::Vmc      => String::from("vmc"),
+            PaymentMethod::All      => String::from("mobilemoney"),
+        };
+        transaction.insert(METHOD, method);
+        payment.sum();
+        transaction.insert(AMOUNT, payment.amount.to_string());
+        //optional field
+        transaction.insert(ADDITIONAlINFO, payment.additionalinfo);
+        // auth email field is optional for non mobile payments
+        transaction.insert(AUTHEMAIL, payment.auth_email);
+        // etc below
+        //check if email exists
+        Ok(transaction)
+    }
+
+    //TODO initiate passenger ticket transaction
+    pub fn init_passenger_ticket_transaction(self, ) -> Result<(),&'static str> {
+        //"url endoded http req"
+        Ok(())
+
+    } 
+
+}
+
+
+//
+
+impl Transaction for Paynow {
+    /// Makes a minimal transaction
+    /// The transaction type i.e Init, Mobile or Passenger Ticket will update and addd required fields
+    /// Based on this template, Data Extractors may be used as well soon!!
+    fn build(&self) -> HashMap<&'static str, String> {
         let transaction: HashMap<&'static str, String> = HashMap::new();
         transaction.insert(ID, self.integration_id.to_string());
         transaction.insert(REFERENCE, String::new());
@@ -169,74 +249,15 @@ impl Paynow {
         transaction.insert(STATUS, "Message".to_owned());
         transaction
 
+        // HashMap::new() //dummy
     }
-
-    // TODO initiate transaction request
-    /// Send invokes the Initiate Transaction request to Paynow
-    pub fn send(&self, payment: &mut Payment) -> &'static str {
-        // URL encoded HTTP request to be returned 
-    
-        // get Payment amount before posting
-        let transaction: HashMap<&'static str, String> = self.pre_build_transaction();
-        transaction.insert(REFERENCE, payment.reference);
-        payment.sum(); 
-        transaction.insert(AMOUNT, payment.amount.to_string());
-        //optional field
-        transaction.insert(ADDITIONAlINFO, payment.additionalinfo);
-        // auth email field is optional for non mobile payments
-        transaction.insert(AUTHEMAIL, payment.auth_email);
-        /* Only when merchant is registered to tokenize payments should field be included
-         in transaction, there is an email to find out how, but Im not gonna put it here
-         go read the official Paynow docs 
-        */
-        // TODO iterate over the dictionary, concatenate pairs and serialize to a string
-        // 
-        transaction.insert(HASH, "RANDOM&FAKEHASH#$%@^$%^9000000909453SD".to_owned());
-        // T
-        // Ehmm but whats the order of fields??
-
-
-        "Status=Ok&BrowserUrl=http%3a%2f%2fwwwADEDBDE788862032F1BD82CF3B92DE5D5B40DBB35F1A4FD7D"
-    }
-
-    //TODO inititiate express checkout transaction
-    /// Send Mobile version transactin , requires email
-    pub fn send_mobile(&mut self, payment: &mut Payment, phone: &'static str, method: PaymentMethod) -> () {
-        // If auth_email does not exist , Throw A tantrum.
-        let transaction: HashMap<&'static str, String> = self.pre_build_transaction();
-        transaction.insert(PHONE, phone.to_owned());
-        let method: String = match method {
-            PaymentMethod::Ecocash => String::from("ecocash"),
-            PaymentMethod::OneMoney => String::from("onemoney"),
-            PaymentMethod::Telecash => String::from("telecash"),
-            PaymentMethod::Vmc      => String::from("vmc"),
-            PaymentMethod::All      => String::from("mobilemoney"),
-        };
-        transaction.insert(METHOD, method);
-        payment.sum();
-        transaction.insert(AMOUNT, payment.amount.to_string());
-        //optional field
-        transaction.insert(ADDITIONAlINFO, payment.additionalinfo);
-        // auth email field is optional for non mobile payments
-        transaction.insert(AUTHEMAIL, payment.auth_email);
-        // etc below
-        //check if email exists
-
-    }
-
-    //TODO initiate passenger ticket transaction
-    pub fn init_passenger_ticket_transaction(self, ) -> () {
-        //"url endoded http req"
-
-    } 
-
 }
 
-/// Payment helper "Trait" for composing transaction before posting to Paynow
+/// Helper for composing transactions before posting to Paynow
 #[derive(Clone, Debug, Serialize, Deserialize, PartialEq)]
 pub struct Payment {
     reference: String, // unique identifier for transaction
-    items: HashMap<String, isize>,  // Dictionary of items in shopping cart description and amountjjj
+    items: HashMap<String, isize>,  // Dictionary of items in shopping cart description and amount
     auth_email: String, // Users email address
     additionalinfo: String,
     payment_method: PaymentMethod,
@@ -244,7 +265,7 @@ pub struct Payment {
 }
 
 
-//Persoanl notes
+//Personal notes
 // Get data from paynow, analysise and extract required fields for specific transaction
 
 impl Payment {
@@ -283,9 +304,9 @@ impl Payment {
     pub fn get_additionalinfo(&'static self) -> &'static str {
         &self.additionalinfo
     }
-    
-
 }
+
+//TODO Implement Iterator to later Show Payment info
 
 /// InitResponse Wrapper "Trait" for response from Paynow during transaction initiation
 #[derive(Clone, Debug, Serialize, Deserialize, PartialEq)]
@@ -329,4 +350,8 @@ status	String	Should be set to “Message” at this stage of the transaction.
 hash	String	Details of Hash generation are provided in the Generating Hash section.
 */
 
+//TODO refactor transaction formatting using traits
+trait Transaction {
+    fn  build(&self) -> HashMap<&'static str, String> ;
+}
 
