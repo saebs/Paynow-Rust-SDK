@@ -15,6 +15,8 @@ pub mod constants;
 /// General utilities for e.g. hashing , Data Collection , Sanitising and non core stuff
 pub mod helpers;
 
+pub mod pngt;
+
 // client here.....
 
 #[cfg(test)]

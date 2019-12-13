@@ -1,3 +1,9 @@
+/********************************
+Copyright (c) Webenchanter
+Author: Sabelo Ntabeni 
+email: sabelo.n@yandex.com
+*******************************/ 
+
 // Paynow Endpoints
 pub const URL_INITIATE_TRANSACTION: &'static str = "https://www.paynow.co.zw/interface/initiatetransaction";
 pub const URL_INITIATE_EXPRESS_CHECKOUT_TRANSACTION: &'static str = "https://www.paynow.co.zw/interface/remotetransaction";

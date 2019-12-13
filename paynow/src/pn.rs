@@ -1,29 +1,33 @@
+/********************************
+Copyright (c) Webenchanter
+Author: Sabelo Ntabeni 
+email: sabelo.n@yandex.com
+*******************************/ 
+//  Paynow Rust SDK
+
 use std::collections::HashMap;
 use serde::{Serialize, Deserialize};
 
 use crate::constants::*;
-/*Statuses
-The following are other possible status settings, 
-these will be sent to the merchant site if they change in Paynow or if the merchant polls Paynow for the current status:
-*/
 
-/// Status enum to represent Response status
+///  Enum to represent Paynow Response Status
 #[derive(Clone, Debug, Serialize, Deserialize, PartialEq)]
 pub enum Status {
-    /// Initiating Transaction status posted to Paynow by Merchant Client
+    /// When Initiating Transaction this status is set by Merchant 
     Message,
 
     /// If the initiate transaction request is successful 
-    Ook, // Ok reserved in rust so Ook will do 
+    Ook, // Ok is reserved in rust so Ook will do uyabona. 
 
     /// If the initiate transaction request failed 
     Error, 
 
-    /// Paid  Transaction paid successfully, the merchant will receive the funds at next settlement.
+    /// Paid  Transaction paid successfully, the merchant will receive the funds
+    /// at next settlement.
     Paid,
 
-    /// Awaiting Delivery Transaction paid successfully, but is sitting in suspense waiting on the merchant to confirm 
-    /// delivery of the goods.
+    /// Awaiting Delivery Transaction paid successfully, but is sitting in 
+    /// suspense waiting on the merchant to confirm delivery of the goods.
     AwaitingDelivery,
 
     /// Delivered  The user or merchant has acknowledged delivery of the goods but the funds are still sitting
@@ -47,31 +51,30 @@ pub enum Status {
     /// Refunded Funds were refunded back to the customer.
     Refunded,
 
-    ///Pending 3DS , means card holder is required to complete 3ds Secure payments challenge 
-    /// if using VISA / Mastercard
+    /// A card holder is required to complete 3ds Secure payments challenge if using VISA / Mastercard
     Pending3ds,
 }
 
-/// Passenger Types for Passenger Ticket Transaction
+/// Options for Passenger Ticket Transaction
 #[derive(Clone, Debug, Serialize, Deserialize, PartialEq)]
 pub enum Passenger {
-    /// ADT  Adult	
+    // ADT  Adult	
     Adt,
-    /// CNN Child
+    // CNN Child
     Cnn,
-    /// INF Infant
+    // INF Infant
     Inf,
-    /// YTH youth
+    // YTH youth
     Yth,
-    /// STU Student
+    // STU Student
     Stu,
-    /// SCR Senior Citizen
+    // SCR Senior Citizen
     Scr,
-    /// MIL Military
+    // MIL Military
     Mil,
 }
 
-/// Mobile Money Payment Methods
+///  Mode of payment when using Mobile Money and or Credit/ Debit Cards 
 #[derive(Clone, Debug, Serialize, Deserialize, PartialEq)]
 pub enum PaymentMethod {
     //Mobile money , String is buyer's phone number
@@ -109,7 +112,7 @@ pub struct Card {
     billingcountry:  String,
 }
 
-/// Paynow type for interacting with paynow api
+/// Paynow type for interacting with paynow 
 #[derive( Debug, Copy, Serialize, Deserialize, PartialEq)]
 pub struct Paynow {
     integration_id: &'static str, 
@@ -117,33 +120,37 @@ pub struct Paynow {
     /* Merchant's endpoints. */
     returnurl: &'static str,
     resulturl: &'static str, 
-
     tokenize: bool,
 }
 
 
 impl Paynow {
-    // Constructor
+    /// Constructor for Paynow Type 
     pub fn new(integration_id: &'static str, integration_key: &'static str) -> Result<Paynow, ()> {
-        // return url and result are optional and can be changed later, so we can initialise to empty strings 
+        // returnurl and resulturl are optional at this stage and can be changed later
+        // so we initialise to empty strings 
+        // The default behavior is to set tokenize to False,
+        // If merchant is registered to use token it needs to be set to True later 
+        // using setters or other Configuration methods like environtment variables etc go figure
         let paynow = Paynow {integration_id, integration_key, returnurl: "", resulturl: "", tokenize: false};
         Ok(paynow)
     }
 
-    /// Create Paynow instance from other Data sources eg dictionary, text file maybe? or JSON i dont know
-    /// but it will work simple!!
-    /// check the helpers module
+    /// Create Paynow instance from other types
+    // Data sources could be e.g. HashMap, text file maybe? 
+    // or JSON i dont known but it will work simple!!
+    // check the helpers module
+    /// NB: Not production ready,
     fn from<T>(source: T) -> Result<Paynow, ()>{
-        // TODO Fix this nonsense before production use,
-        // infact thats why its private for now
+        // TODO Fix this nonsense before  making it public 
         let paynow = Paynow {integration_id: "kung", integration_key: "foo", returnurl: "", resulturl: "", tokenize: false};
         Ok(paynow)
     }
 
-    /// Create Payment 
+    /// Instantiaites a Payment "Object"
+    /// It is used for creating a shopping cart and stuff  
     pub fn create_payment(&mut self, reference: &'static str, auth_email: &'static str) -> Result<Payment, ()> {
-        // initialise payment
-        // The unique transaction reference is a mandatory requirement
+        // The unique transaction reference is a mandatory field, Otherwise Haurinwe !!
         // eg  create payment for "invoice 267"
         // all other fields initialized to nada!!
     
@@ -161,13 +168,13 @@ impl Paynow {
     }
 
     // TODO initiate transaction request
-    /// Send invokes the Initiate Transaction request to Paynow
+    /// Formarts and Initiates a standard Transaction request to Paynow
     pub fn send(&self, payment: &mut Payment) -> Result<&'static str, &'static str> {
         // URL encoded HTTP request to be returned 
     
-        // get Payment amount before posting
         let transaction: HashMap<&'static str, String> = self.build();
         transaction.insert(REFERENCE, payment.reference);
+        // get Payment Total  amount before posting Always.
         payment.sum(); 
         transaction.insert(AMOUNT, payment.amount.to_string());
         //optional field
@@ -178,10 +185,11 @@ impl Paynow {
          in transaction, there is an email to find out how, but Im not gonna put it here
          go read the official Paynow docs 
         */
+
         // TODO iterate over the dictionary, concatenate pairs and serialize to a string
-        // 
+        // WHEN DONE, make a hash and append to transaction string
+        // use the makehash function / helper
         transaction.insert(HASH, "RANDOM&FAKEHASH#$%@^$%^9000000909453SD".to_owned());
-        // T
         // Ehmm but whats the order of fields??
 
 
