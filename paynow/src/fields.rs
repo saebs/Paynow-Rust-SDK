@@ -52,6 +52,25 @@ pub const JOURNEY_TYPE: &'static str = "journeytype";
 pub const COMPLETE_ROUTE: &'static str = "completeroute";
 
 
+//	String	(optional) Only returned for successful payments: Masked card number, mobile wallet MSISDN etc.
+pub const PAYMENTINSTRUMENT:	&'static str            =  "paymentinstrument";   
+//  String	(optional) Only returned for successful payments: Name of the channel used e.g. Visa, Mastercard, Ecocash
+pub const PAYMENTCHANNEL:  &'static str                 =  "paymentchannel";	    
+// String	(optional) Only returned for successful payments:Cardholder Name";
+pub const PAYMENTINSTRUMENTNAME:&'static str	        =  "paymentinstrumentname";	
+//String	(optional) Only returned for successful payments:Approval transaction code
+pub const PAYMENTCHANNELREFERENCE:	 &'static str       =  "paymentchannelreference";	
+//String	(optional) Only returned for successful payments:Electronic Commerce Indicator
+pub const PAYMENTCHANNELECI:	 &'static str           =  "paymentchanneleci";	
+//String	(optional) Payment Fraud Score
+pub const PAYMENTFRAUDSCORE:	 &'static str           =  "paymentfraudscore";	
+//String	(optional) Issue, Request Manual Review, Reject
+pub const PAYMENTFRAUDDECISION:	  &'static str          =  "paymentfrauddecision";	
+//String	(optional) Only returned for successful payments: Domestic or Foreign
+pub const PAYMENTINSTRUMENTNATIONALITY:	 &'static str   =  "paymentinstrumentnationality";	
+
+
+
 //Merchant defaults 
 pub const URL_MERCHANT_LOCALHOST: &'static str = "http://localhost";
 
