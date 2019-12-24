@@ -60,7 +60,8 @@ pub enum Status {
     Message,
 
     /// If the initiate transaction request is successful 
-    Ook, // Ok is reserved in rust so Ook will do uyabona. 
+    // 'Ok' is reserved so we'll use just 'Okay' to reduce ambiguity, go argue with your ancestors. 
+    Okay,
 
     /// If the initiate transaction request failed 
     Error, 
@@ -102,7 +103,7 @@ impl fmt::Display for Status {
     fn fmt(&self, field: &mut fmt::Formatter) -> fmt::Result {
         match *self {
             Status::Message => write!(field, "Message"),
-            Status::Ook => write!(field, "Ok"),
+            Status::Okay => write!(field, "Ok"),
             Status::Error => write!(field, "Error"),
             Status::Paid => write!(field, "Paid"),
             Status::AwaitingDelivery => write!(field, "Awaiting Delivery"),
@@ -137,16 +138,48 @@ pub enum Passenger {
     Mil,
 }
 
+impl fmt::Display for Passenger {
+    fn fmt(&self, field: & mut fmt::Formatter) -> fmt::Result {
+        match *self {
+            Passenger::Adt => write!(field, "Adult"),
+            Passenger::Cnn => write!(field, "Child"),
+            Passenger::Inf => write!(field, "Infant"),
+            Passenger::Mil => write!(field, "Military"),
+            Passenger::Scr => write!(field, "Senior Citizen"),
+            Passenger::Stu => write!(field, "Student"),
+            Passenger::Yth => write!(field, "Youth"),
+        }
+
+    }
+}
+
 ///  Mode of payment when using Mobile Money and or Credit/ Debit Cards 
 // #[derive(Clone, Debug, Serialize, Deserialize, PartialEq)]
 pub enum PaymentMethod {
-    //Mobile money , String is buyer's phone number
+    //MNO's 
     Ecocash,     
     OneMoney,
     Telecash,
-    // Visa / MasterCard
-    Vmc,
-    All,
+    // Obvious
+    Visa,
+    MasterCard,
+}
+
+impl fmt::Display for PaymentMethod {
+    fn fmt(&self, method: &mut fmt::Formatter) -> fmt::Result {
+        match *self {
+            // Some methods like telecash or onemoney may not be supported yet
+            // but the have been included , just incase 
+            PaymentMethod::Ecocash => write!(method, "ecocash"),
+            PaymentMethod::OneMoney => write!(method, "onemoney"),
+            PaymentMethod::Telecash => write!(method, "telecash"),
+
+            //Paynow doesnt make the distinction but we do... 
+            // 'vmc' , Visa/Mastercard
+            PaymentMethod::Visa => write!(method, "vmc"),
+            PaymentMethod::MasterCard => write!(method, "vmc"),
+        }
+    }
 }
 
 
