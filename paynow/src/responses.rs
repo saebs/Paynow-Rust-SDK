@@ -1,14 +1,6 @@
 // Reusables module Generics and Traits 
 use std::collections::HashMap;
 
-// trait PayNowTransaction {
-//     fn send<T>(&self) -> T;
-
-//     fn build<T, K>(&self) -> HashMap<T, K>;
-
-// }
-
-
 trait Response {
     fn get_data(&self, source: HashMap<&'static str, &'static str>) {
 
@@ -17,6 +9,7 @@ trait Response {
     fn poll_url<T>(&self, uri: T) {
 
     }
+
     fn redirect_link<T>(&self, redirect: T) {
 
     }
