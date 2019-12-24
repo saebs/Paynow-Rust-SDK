@@ -25,3 +25,11 @@ hash	String	Details of Hash generation are provided in the Generating Hash secti
 */
 
 //TODO refactor transaction formatting using traits
+
+
+
+struct RegularTransaction ; // TODO
+
+struct MobileMoneyTransaction;
+
+struct PassengerTicketTransaction;

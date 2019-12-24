@@ -1,12 +1,6 @@
 // Reusables module Generics and Traits 
 use std::collections::HashMap;
 
-struct RegularTransaction ; // TODO
-
-struct MobileMoneyTransaction;
-
-struct PassengerTicketTransaction;
-
 // trait PayNowTransaction {
 //     fn send<T>(&self) -> T;
 

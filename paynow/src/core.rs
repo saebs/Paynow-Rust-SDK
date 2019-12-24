@@ -60,21 +60,19 @@ impl Payment {
     pub fn new() -> Payment {
         Payment {reference: "", items: HashMap::new(), auth_email: "", additionalinfo: "", amount: 0}
     }
-/// Add item to trolley , Muno tinoti trolley, 'cart' kuti kudii?
-// We want to use cents for now till i figure out best data type to use.
-// Paynow recommends max of two decimal places for amounts, so maybe we can work around this
-// from first principles
+    /// Add item to trolley , Muno tinoti trolley, 'cart' kuti kudii?
+    // We want to use cents for now till i figure out best data type to use.
+    // Paynow recommends max of two decimal places for amounts, so maybe we can work around this
+    // from first principles
     pub fn add(&mut self, item: &'static str, price: usize) {
         self.items.insert(item, price);
 
     }
 
-    // pub fn add(&mut self, item: &'static str, amount: isize) {
-    //     //TODO iterate cart and get total amount
-    //     self.items.insert(item.to_owned(), amount);
- 
-    // }
-    // remove from cart
+    /// remove item from trolley or basket
+    pub fn remove(&mut self, item: &'static str) {
+        self.items.remove(item);
+    }
     
     // Payment Total
     

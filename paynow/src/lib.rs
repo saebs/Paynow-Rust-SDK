@@ -55,4 +55,13 @@ use std::collections::HashMap;
         assert_eq!(tsaona, katsapo.items);
         
     }
+
+    #[test]
+    fn remove_from_shopping_basket() {
+        let mut katsapo = Payment::new();
+        katsapo.add("scud", 700);
+        katsapo.remove("scud");
+        assert_eq!(katsapo.items.is_empty(), true);
+
+    }
 }
