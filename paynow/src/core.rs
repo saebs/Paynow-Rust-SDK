@@ -13,6 +13,8 @@ use crate::fields::*;
 /// Paynow type for interacting with paynow 
 #[derive( Debug, PartialEq)]
 pub struct Paynow {
+    //TODO make idiomatic 
+    // write setters and getters for these parameters and hide em
     pub integration_id: &'static str, 
     pub integration_key: &'static str,
     pub returnurl: &'static str,
@@ -20,13 +22,19 @@ pub struct Paynow {
     pub tokenize: bool,
 }
 
-
 impl Paynow {
     /// Creates an empty instance for Paynow Type 
     pub fn new() -> Paynow {
         // If merchant is registered to use token it needs to be set to True later 
         Paynow {integration_id: "", integration_key: "", returnurl: "", resulturl: "", tokenize: false}
     }
+
+    /// Create a Payment
+    pub fn create_payment(&mut self, reference: &'static str, auth_email: &'static str) -> Payment {
+        let items = HashMap::new();
+        Payment {reference, items, auth_email, additionalinfo: "", amount: 0usize}
+    }
+    
 
     /// Create Paynow instance from key - value pairs
     // Data sources could be e.g. HashMap, text file maybe? 
@@ -44,13 +52,13 @@ impl Paynow {
 
 
 /// Helper for composing transactions before posting to Paynow
-#[derive(Clone, Debug)]
+#[derive(Clone, Debug, PartialEq)]
 pub struct Payment {
     pub reference: &'static str, // unique identifier for transaction
     pub items: HashMap<&'static str, usize>,  // Dictionary of items in shopping cart description and amount
     pub auth_email: &'static str, // Users email address
     pub additionalinfo: &'static str,
-    pub amount: isize,
+    pub amount: usize,
 }
 
 
@@ -58,7 +66,7 @@ pub struct Payment {
 // Get data from paynow, analysise and extract required fields for specific transaction
 impl Payment {
     pub fn new() -> Payment {
-        Payment {reference: "", items: HashMap::new(), auth_email: "", additionalinfo: "", amount: 0}
+        Payment {reference: "", items: HashMap::new(), auth_email: "", additionalinfo: "", amount: 0usize}
     }
     /// Add item to trolley , Muno tinoti trolley, 'cart' kuti kudii?
     // We want to use cents for now till i figure out best data type to use.

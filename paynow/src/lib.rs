@@ -63,5 +63,21 @@ use std::collections::HashMap;
         katsapo.remove("scud");
         assert_eq!(katsapo.items.is_empty(), true);
 
+    } 
+
+    #[test]
+    fn creates_payement_obj() {
+
+        let mut imbadalo = Paynow::new();
+        let payment = Payment {
+            reference: "000", // unique identifier for transaction
+            items: HashMap::new(),  // Dictionary of items in shopping cart description and amount
+            auth_email: "your@email.com", // Users email address
+            additionalinfo: "",
+            amount: 0usize,
+        };
+
+
+        assert_eq!(imbadalo.create_payment("000", "your@email.com"),payment );
     }
 }
