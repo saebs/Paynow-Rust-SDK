@@ -18,7 +18,6 @@ pub mod utils;
 pub mod responses;
 
 // use pn::{Payment, Paynow};
-use std::fmt::Write;
 // client here.....
 
 #[cfg(test)]
