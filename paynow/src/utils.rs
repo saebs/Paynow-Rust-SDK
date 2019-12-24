@@ -4,7 +4,6 @@ Author: Sabelo Ntabeni
 email: sabelo.n@yandex.com
 *******************************/ 
 
-use std::fmt::{UpperHex};
 
 // Build hasher helper
 
