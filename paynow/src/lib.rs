@@ -70,9 +70,9 @@ use std::collections::HashMap;
 
         let mut imbadalo = Paynow::new();
         let mut payment = Payment {
-            reference: "000", // unique identifier for transaction
-            items: HashMap::new(),  // Dictionary of items in shopping cart description and amount
-            auth_email: "your@email.com", // Users email address
+            reference: "000", 
+            items: HashMap::new(),  
+            auth_email: "your@email.com", 
             additionalinfo: "",
             amount: 0usize,
         };
