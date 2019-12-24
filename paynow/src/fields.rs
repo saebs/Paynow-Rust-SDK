@@ -156,11 +156,9 @@ impl fmt::Display for Passenger {
 ///  Mode of payment when using Mobile Money and or Credit/ Debit Cards 
 // #[derive(Clone, Debug, Serialize, Deserialize, PartialEq)]
 pub enum PaymentMethod {
-    //MNO's 
     Ecocash,     
     OneMoney,
     Telecash,
-    // Obvious
     Visa,
     MasterCard,
 }
@@ -174,8 +172,8 @@ impl fmt::Display for PaymentMethod {
             PaymentMethod::OneMoney => write!(method, "onemoney"),
             PaymentMethod::Telecash => write!(method, "telecash"),
 
-            //Paynow doesnt make the distinction but we do... 
             // 'vmc' , Visa/Mastercard
+            //Paynow doesnt make the distinction but we do... 
             PaymentMethod::Visa => write!(method, "vmc"),
             PaymentMethod::MasterCard => write!(method, "vmc"),
         }

@@ -69,7 +69,7 @@ use std::collections::HashMap;
     fn creates_payement_obj() {
 
         let mut imbadalo = Paynow::new();
-        let payment = Payment {
+        let mut payment = Payment {
             reference: "000", // unique identifier for transaction
             items: HashMap::new(),  // Dictionary of items in shopping cart description and amount
             auth_email: "your@email.com", // Users email address
@@ -79,5 +79,7 @@ use std::collections::HashMap;
 
 
         assert_eq!(imbadalo.create_payment("000", "your@email.com"),payment );
+        // let just test the sum method here
+        assert_eq!(0, payment.sum())
     }
 }

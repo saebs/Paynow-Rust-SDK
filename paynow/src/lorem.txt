@@ -5,3 +5,13 @@
 
 // Error
 // Status=Error&Error=Invalid+amount+field
+
+
+A simple form using the default application/x-www-form-urlencoded content type:
+
+POST /test HTTP/1.1
+Host: foo.example
+Content-Type: application/x-www-form-urlencoded
+Content-Length: 27
+
+field1=value1&field2=value2

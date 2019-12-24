@@ -82,7 +82,15 @@ impl Payment {
         self.items.remove(item);
     }
     
-    // Payment Total
+    /// Payment Total
+    /// Should used to get shopping total amount , ie update payment amount 
+    pub fn sum(&mut self) -> usize {
+        let mut amt = 0usize;
+        for i in self.items.values() {
+            amt += i;
+        };
+        amt
+    }
     
     // need to get polls status.....
 }
