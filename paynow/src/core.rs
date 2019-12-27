@@ -3,15 +3,13 @@ Copyright (c) Webenchanter
 Author: Sabelo Ntabeni 
 email: sabelo.n@yandex.com
 *******************************/ 
-//  Paynow Rust SDK
+//  Rust SDK for Paynow Zimbabwe's API
 
 use std::collections::{HashMap};
-// use serde::{Serialize, Deserialize};
-// use std::fmt::{Write};
 use crate::properties::*;
 use crate::responses::*;
 
-/// Paynow type for interacting with paynow 
+/// The main Model type for interacting with Paynow 
 #[derive( Debug, PartialEq)]
 pub struct Paynow {
     //TODO make idiomatic 
@@ -24,21 +22,17 @@ pub struct Paynow {
 }
 
 /*
-
 CreatePayment(String reference, Dictionary<String, Decimal> values = null, String authEmail = )	
 StatusResponse	PollTransaction(String url)	
 StatusResponse	ProcessStatusUpdate(String response)	
 StatusResponse	ProcessStatusUpdate(Dictionary<String, String> response)	
 InitResponse	Send(Payment payment)	
 InitResponse	SendMobile(Payment payment, String phone, MobileMoneyMethod method = Ecocash)
-
-
-
 */
 
 impl Paynow {
     /// Creates an empty instance for Paynow Type 
-    pub fn new() -> Paynow {
+    pub fn new() -> Self {
         // If merchant is registered to use token it needs to be set to True later 
         Paynow {integration_id: "", integration_key: "", returnurl: "", resulturl: "", tokenize: false}
     }
@@ -55,7 +49,7 @@ impl Paynow {
     // or JSON i dont know. 
     // To KISS it we will use a hashmap 
     /// NB: Not production ready,
-    pub fn from<T, V>(source: HashMap<T,V>) -> Paynow {
+    pub fn from<T, V>(source: HashMap<T,V>) -> Self {
         // TODO Fix this nonsense before  putting to production` 
 
         let paynow = Paynow {integration_id: "kung", integration_key: "foo", returnurl: "", resulturl: "", tokenize: false};
@@ -112,7 +106,7 @@ pub struct Payment {
 //Personal notes
 // Get data from paynow, analysise and extract required fields for specific transaction
 impl Payment {
-    pub fn new() -> Payment {
+    pub fn new() -> Self {
         Payment {reference: "", items: HashMap::new(), auth_email: "", additionalinfo: "", amount: 0usize}
     }
     /// Add item to trolley , Muno tinoti trolley, 'cart' kuti kudii?
@@ -131,8 +125,8 @@ impl Payment {
     
     /// Payment Total
     /// Should used to get shopping total amount , ie update payment amount 
-    pub fn sum(&mut self) -> usize {
-        let mut amt = 0usize;
+    pub fn sum(&mut self) -> usize{
+        let mut amt = 0;
         for i in self.items.values() {
             amt += i;
         };
