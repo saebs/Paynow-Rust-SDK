@@ -20,10 +20,12 @@ pub mod responses;
 // use pn::{Payment, Paynow};
 // client here.....
 
+
 #[cfg(test)]
 mod tests {
 use crate::core::{Paynow, Payment};
 use std::collections::HashMap;
+use crate::utils::*;
     #[test]
     fn creates_paynow_instance() {
         let paynow: Paynow = Paynow::new();   
@@ -80,5 +82,12 @@ use std::collections::HashMap;
         assert_eq!(imbadalo.create_payment("000", "your@email.com"),payment );
         // let just test the sum method here
         assert_eq!(0, payment.sum())
+    }
+
+    #[test]
+    fn hash_util() {
+        let message = "1201TEST REF99.99A test ticket transactionhttp://www.google.com/search?q=returnurlhttp://www.google.com/search?q=resulturlMessage";
+        assert_eq!(hash_make(message, "3e9fed89-60e1-4ce5-ab6e-6b1eb2d4f977"), "2A033FC38798D913D42ECB786B9B19645ADEDBDE788862032F1BD82CF3B92DEF84F316385D5B40DBB35F1A4FD7D5BFE73835174136463CDD48C9366B0749C689")
+
     }
 }
