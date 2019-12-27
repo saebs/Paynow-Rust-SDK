@@ -24,7 +24,7 @@ pub mod responses;
 #[cfg(test)]
 mod tests {
 use crate::core::{Paynow, Payment};
-use std::collections::HashMap;
+use std::collections::{HashMap,BTreeMap};
 use crate::utils::*;
     #[test]
     fn creates_paynow_instance() {
@@ -88,6 +88,23 @@ use crate::utils::*;
     fn hash_util() {
         let message = "1201TEST REF99.99A test ticket transactionhttp://www.google.com/search?q=returnurlhttp://www.google.com/search?q=resulturlMessage";
         assert_eq!(hash_make(message, "3e9fed89-60e1-4ce5-ab6e-6b1eb2d4f977"), "2A033FC38798D913D42ECB786B9B19645ADEDBDE788862032F1BD82CF3B92DEF84F316385D5B40DBB35F1A4FD7D5BFE73835174136463CDD48C9366B0749C689")
+
+    }
+
+    #[test]
+    fn builds_outbound_message() {
+        let mut txn: BTreeMap<&str, &str>  = BTreeMap::new();
+        txn.insert("id", "1201");
+        txn.insert("reference", "TEST REF");
+        txn.insert("amount", "99.99");
+        txn.insert("additionalinfo", "A test ticket transaction");
+        txn.insert("returnurl","http://www.google.com/search?q=returnurl");
+        txn.insert("resulturl","http://www.google.com/search?q=resulturl");
+        txn.insert("status", "Message");
+
+        assert_eq!(values_to_string(txn), "1201TEST REF99.99A test ticket transactionhttp://www.google.com/search?q=returnurlhttp://www.google.com/search?q=resulturlMessage");
+
+
 
     }
 }

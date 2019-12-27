@@ -7,6 +7,7 @@ email: sabelo.n@yandex.com
 /* Collection of General helper functions or utilities */
 
 use sha2::{Sha512, Digest};
+use std::collections::{HashMap, BTreeMap};
 
 /// Generate a hash form two UTF8 strings "message" and 'intergration key'
 pub fn hash_make<'a>(message: &'a str, intergration_key: &'static str) ->  String {
@@ -19,5 +20,13 @@ pub fn hash_make<'a>(message: &'a str, intergration_key: &'static str) ->  Strin
     format!("{:X}", Sha512::digest(hash))
 }
 
+pub fn values_to_string(data: BTreeMap<&str,&str>) -> String {
+    // concat values 
+    let mut post = String::new();
+    for val in data.values() {
+        post.push_str(val);
+    }
+    post
+}
 
 // TODO hash_verify
