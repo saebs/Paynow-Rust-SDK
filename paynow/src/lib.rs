@@ -4,22 +4,18 @@ Author: Sabelo Ntabeni
 email: sabelo.n@yandex.com
 *******************************/ 
 
-// Paynow Rust 
+/*** Rustlang SDK for Paynow Zimbabwe's API  ***/
 
 /// Core Paynow functionality 
-/// like Creating Payments, Handling, Sending and Responses
 pub mod core;
-/// Paynow Transaction & Response fields , API endpoints and common defaults 
+/// Paynow API endpoints, Standard constants, web form "tags" and other implementation defaults 
 pub mod properties;
-
-/// General utilities for e.g. hashing , Data Collection , Sanitising and non core stuff
+/// General utilities and helper code for e.g. hash creation, verification , Data Collection and formatting
 pub mod utils;
-
+/// Http Responses formats or models
 pub mod responses;
-
-// use pn::{Payment, Paynow};
-// client here.....
-
+/// Paynow Transactions
+pub mod transactions;
 
 #[cfg(test)]
 mod tests {
