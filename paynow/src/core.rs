@@ -5,10 +5,11 @@ email: sabelo.n@yandex.com
 *******************************/ 
 //  Paynow Rust SDK
 
-use std::collections::HashMap;
+use std::collections::{HashMap};
 // use serde::{Serialize, Deserialize};
 // use std::fmt::{Write};
 use crate::fields::*;
+use crate::responses::*;
 
 /// Paynow type for interacting with paynow 
 #[derive( Debug, PartialEq)]
@@ -21,6 +22,19 @@ pub struct Paynow {
     pub resulturl: &'static str, 
     pub tokenize: bool,
 }
+
+/*
+
+CreatePayment(String reference, Dictionary<String, Decimal> values = null, String authEmail = )	
+StatusResponse	PollTransaction(String url)	
+StatusResponse	ProcessStatusUpdate(String response)	
+StatusResponse	ProcessStatusUpdate(Dictionary<String, String> response)	
+InitResponse	Send(Payment payment)	
+InitResponse	SendMobile(Payment payment, String phone, MobileMoneyMethod method = Ecocash)
+
+
+
+*/
 
 impl Paynow {
     /// Creates an empty instance for Paynow Type 
@@ -43,9 +57,42 @@ impl Paynow {
     /// NB: Not production ready,
     pub fn from<T, V>(source: HashMap<T,V>) -> Paynow {
         // TODO Fix this nonsense before  putting to production` 
+
         let paynow = Paynow {integration_id: "kung", integration_key: "foo", returnurl: "", resulturl: "", tokenize: false};
         paynow
     }
+
+    fn build(&self, payment: &mut Payment) {
+        let mut dat: HashMap<&'static str, String> = HashMap::new();
+        dat.insert(ID, self.integration_id.to_owned());
+        dat.insert(REFERENCE, payment.reference.to_owned());
+        dat.insert(AMOUNT, payment.sum().to_string());
+        dat.insert(ADDITIONAL_INFO, payment.additionalinfo.to_owned());
+        dat.insert(RETURNURL, self.returnurl.to_owned());
+        dat.insert(RESULTURL, self.resulturl.to_owned());
+        dat.insert(AUTHEMAIL, payment.auth_email.to_owned());
+        if self.tokenize {
+            dat.insert(TOKENIZE, "True".to_owned());
+        }
+        dat.insert(STATUS, Status::Message.to_string());
+        dat.insert(HASH, "GENHASHHERE".to_owned());
+    }
+    // TODO , write send or init transaction functionality
+    // Purpose: to send or init regular payment request
+    // Sign: send(payment) -> InitResponse
+    /// Request to initialise a transaction
+    pub fn send(&self) {
+        //fake
+    }
+
+    //TODO write send mobile method
+    // Purpose : to send or initiate an express checkout / mobile payment
+    // mo
+    // SendMobile(payment,phone, method) -> InitResponse	
+
+
+
+
 
 
     }
