@@ -8,7 +8,7 @@ email: sabelo.n@yandex.com
 use std::collections::{HashMap};
 // use serde::{Serialize, Deserialize};
 // use std::fmt::{Write};
-use crate::fields::*;
+use crate::properties::*;
 use crate::responses::*;
 
 /// Paynow type for interacting with paynow 

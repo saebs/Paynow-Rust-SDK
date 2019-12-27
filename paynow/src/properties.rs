@@ -6,13 +6,12 @@ email: sabelo.n@yandex.com
 
 use std::fmt;
 
-// Paynow Endpoints
+// Paynow API Endpoints
 pub const URL_INITIATE_TRANSACTION: &'static str = "https://www.paynow.co.zw/interface/initiatetransaction";
 pub const URL_INITIATE_EXPRESS_CHECKOUT_TRANSACTION: &'static str = "https://www.paynow.co.zw/interface/remotetransaction";
 pub const URL_INITIATE_PASSENGER_TICKET_TRANSACTION: &'static str = "https://www.paynow.co.zw/interface/initiatetickettransaction";
 
-// Paynow fields Directory
-
+// Paynow fields or Attributes Directory
 pub const RESULTURL: &'static str = "resulturl";
 pub const RETURNURL: &'static str = "returnurl";
 pub const REFERENCE: &'static str = "reference";        

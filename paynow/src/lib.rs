@@ -10,7 +10,7 @@ email: sabelo.n@yandex.com
 /// like Creating Payments, Handling, Sending and Responses
 pub mod core;
 /// Paynow Transaction & Response fields , API endpoints and common defaults 
-pub mod fields;
+pub mod properties;
 
 /// General utilities for e.g. hashing , Data Collection , Sanitising and non core stuff
 pub mod utils;
@@ -102,7 +102,9 @@ use crate::utils::*;
         txn.insert("resulturl","http://www.google.com/search?q=resulturl");
         txn.insert("status", "Message");
 
-        assert_eq!(values_to_string(txn), "1201TEST REF99.99A test ticket transactionhttp://www.google.com/search?q=returnurlhttp://www.google.com/search?q=resulturlMessage");
+        let check1 = "A test ticket transaction99.991201TEST REFhttp://www.google.com/search?q=resulturlhttp://www.google.com/search?q=returnurlMessage";
+        let _check2 = "1201TEST REF99.99A test ticket transactionhttp://www.google.com/search?q=returnurlhttp://www.google.com/search?q=resulturlMessage";
+        assert_eq!(values_to_string(txn),check1 );
 
 
 

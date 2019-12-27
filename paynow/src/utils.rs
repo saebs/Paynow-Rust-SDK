@@ -19,7 +19,9 @@ pub fn hash_make<'a>(message: &'a str, intergration_key: &'static str) ->  Strin
     let hash: &[u8]= msg.as_ref();
     format!("{:X}", Sha512::digest(hash))
 }
-
+///Concats some transaction values to one string
+// Used a BTree to get some form of ordering guarantees but need to verify if 
+// order is important when generating the post
 pub fn values_to_string(data: BTreeMap<&str,&str>) -> String {
     // concat values 
     let mut post = String::new();
