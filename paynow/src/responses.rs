@@ -1,6 +1,6 @@
 // Reusables module Generics and Traits 
 use std::collections::HashMap;
-type WasPaid = bool;
+use crate::fields::*;
 type WasSuccessful = bool;
 
 trait Response {
@@ -28,37 +28,67 @@ trait Response {
     }
 }
 
+/*
+reference	String	The transaction’s reference on the merchant site.
+amount	Decimal	Final amount of the transaction to two decimal places.
+paynowreference	String	Reference number for the transaction in Paynow.
+pollurl	String	The URL on Paynow the merchant site can poll to confirm the transaction’s current status.
+status	String	After payment is complete Paynow will notify the merchant site with one of the Status values.
+hash
+
+
+
+
+success: boolean;
+  hasRedirect: boolean;
+  redirectUrl: String;
+  error: String;
+  pollUrl: String;
+  instructions: String;
+  status: String;
+
+
+*/
 
 pub struct InitResponse<T,V>{
     data: HashMap<T, V>,
+    // success: boolean;
     has_redirect: bool,
-    was_successful: WasSuccessful ,
+    redirect_url: String,
+    error: String,
+    poll_url: String,
+    instructions: String,
+    status: Status,
 }
 
-pub struct IResponse;
-
-impl Response for IResponse {
+impl Response for InitResponse<String, String>{
     fn success(&self) -> WasSuccessful {
-        false // for now , infact this has to go
+        match self.status {
+            Status::Paid => true,
+            Status::AwaitingDelivery => true,
+            _ => false,
+        }
+
     }
+
 }
 
 pub struct StatusResponse {
-    amount: usize,	
-    data: HashMap<&'static str, &'static str>,	
-    reference: &'static str,	
-    was_paid: WasPaid,
-    was_successful: WasSuccessful,
+    reference: &'static str,
+    amount: &'static str,	
+    paynow_reference: &'static str,	
+    pollurl: &'static str,
+    status: Status,
+    hash: &'static str,
 }
 
-impl StatusResponse {
-    fn paid(&self) -> WasPaid {
-        self.was_paid
-    }
-}
 
 impl Response for StatusResponse {
     fn success(&self) -> WasSuccessful {
-        self.was_successful
+        match self.status {
+            Status::Paid => true,
+            Status::AwaitingDelivery => true,
+            _ => false,
+        }
     }
 }
