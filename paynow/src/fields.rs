@@ -186,7 +186,7 @@ impl fmt::Display for PaymentMethod {
     fn fmt(&self, method: &mut fmt::Formatter) -> fmt::Result {
         match *self {
             // Some methods like telecash or onemoney may not be supported yet
-            // but the have been included , just incase 
+            // but have been included , just incase 
             PaymentMethod::Ecocash => write!(method, "ecocash"),
             PaymentMethod::OneMoney => write!(method, "onemoney"),
             PaymentMethod::Telecash => write!(method, "telecash"),
