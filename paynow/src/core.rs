@@ -93,7 +93,7 @@ impl Paynow {
 
 
 /// Helper for composing transactions before posting to Paynow
-#[derive(Clone, Debug, PartialEq)]
+#[derive(Clone, Debug, PartialEq,Eq )]
 pub struct Payment {
     pub reference: &'static str, // unique identifier for transaction
     pub items: HashMap<&'static str, usize>,  // Dictionary of items in shopping cart description and amount
