@@ -113,8 +113,9 @@ impl Payment {
     // We want to use cents for now till i figure out best data type to use.
     // Paynow recommends max of two decimal places for amounts, so maybe we can work around this
     // from first principles
-    pub fn add(&mut self, item: &'static str, price: usize) {
-        self.items.insert(item, price);
+    pub fn add(&mut self, item: &'static str, price: f64) {
+        // we want to use cents
+        self.items.insert(item, (price * 100f64) as usize);
 
     }
 
