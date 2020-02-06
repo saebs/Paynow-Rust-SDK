@@ -8,6 +8,7 @@ email: sabelo.n@yandex.com
 use std::collections::{HashMap};
 use crate::properties::*;
 use crate::responses::*;
+use std::num::ParseFloatError;
 
 /// The main Model type for interacting with Paynow 
 #[derive( Debug, PartialEq)]
@@ -85,10 +86,6 @@ impl Paynow {
     // SendMobile(payment,phone, method) -> InitResponse	
 
 
-
-
-
-
     }
 
 
@@ -109,14 +106,13 @@ impl Payment {
     pub fn new() -> Self {
         Payment {reference: "", items: HashMap::new(), auth_email: "", additionalinfo: "", amount: 0usize}
     }
-    /// Add item to trolley , Muno tinoti trolley, 'cart' kuti kudii?
-    // We want to use cents for now till i figure out best data type to use.
-    // Paynow recommends max of two decimal places for amounts, so maybe we can work around this
-    // from first principles
-    pub fn add(&mut self, item: &'static str, price: f64) {
-        // we want to use cents
+    /// Add item to trolley ehe 
+    // Paynow recommends max of two decimal places for amounts
+    pub fn add(&mut self, item: &'static str, price: &str) -> Result<(), ParseFloatError> {
+        let price = price.parse::<f64>()?;
+        // we want to store totla amount in cents
         self.items.insert(item, (price * 100f64) as usize);
-
+        Ok(())
     }
 
     /// remove item from trolley or basket

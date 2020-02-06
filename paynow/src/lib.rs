@@ -48,7 +48,7 @@ use crate::utils::*;
         let mut tsaona: HashMap<&'static str, usize> = HashMap::new();
         tsaona.insert("chingwa", 1500); // ma Cents usatya!!
         let mut katsapo = Payment::new();
-        katsapo.add("chingwa", 15.00);
+        katsapo.add("chingwa", "15.00");
         assert_eq!(tsaona, katsapo.items);
         
     }
@@ -56,7 +56,7 @@ use crate::utils::*;
     #[test]
     fn remove_from_shopping_basket() {
         let mut katsapo = Payment::new();
-        katsapo.add("scud", 7.00);
+        katsapo.add("scud", "7.00");
         katsapo.remove("scud");
         assert_eq!(katsapo.items.is_empty(), true);
 
