@@ -50,8 +50,9 @@ impl Paynow {
     // or JSON i dont know. 
     // To KISS it we will use a hashmap 
     /// NB: Not production ready,
-    pub fn from<T, V>(source: HashMap<T,V>) -> Self {
+    pub fn from<T>(data_src: T) -> Self {
         // TODO Fix this nonsense before  putting to production` 
+        // supposed to parse json, xml or csv 
 
         let paynow = Paynow {integration_id: "kung", integration_key: "foo", returnurl: "", resulturl: "", tokenize: false};
         paynow
@@ -110,7 +111,7 @@ impl Payment {
     // Paynow recommends max of two decimal places for amounts
     pub fn add(&mut self, item: &'static str, price: &str) -> Result<(), ParseFloatError> {
         let price = price.parse::<f64>()?;
-        // we want to store totla amount in cents
+        // we want to store total amount in cents
         self.items.insert(item, (price * 100f64) as usize);
         Ok(())
     }
