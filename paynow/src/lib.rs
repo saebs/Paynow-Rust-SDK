@@ -17,6 +17,8 @@ pub mod responses;
 /// Paynow Transactions
 pub mod transactions;
 
+pub mod client;
+
 #[cfg(test)]
 mod tests {
 use crate::core::{Paynow, Payment};

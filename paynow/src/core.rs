@@ -5,9 +5,13 @@ email: sabelo.n@yandex.com
 *******************************/ 
 //  Rust SDK for Paynow Zimbabwe's API
 
+use reqwest::Client;
+use hyper::Request;
+
 use std::collections::{HashMap};
 use crate::properties::*;
 use crate::responses::*;
+use crate::transactions::*;
 use std::num::ParseFloatError;
 
 /// The main Model type for interacting with Paynow 
@@ -73,21 +77,30 @@ impl Paynow {
         dat.insert(STATUS, Status::Message.to_string());
         dat.insert(HASH, "GENHASHHERE".to_owned());
     }
-    // TODO , write send or init transaction functionality
+    // TODO , iwrite send or init transaction functionality
     // Purpose: to send or init regular payment request
     // Sign: send(payment) -> InitResponse
     /// Request to initialise a transaction
-    pub fn send(&self) {
-        //fake
+    pub fn send(&self, payment: Payment)  {
+        //initiate new clients and send req
+        
+        // determine payment method
+
+        // set Transaction type requied to txn
+
+        unimplemented!()
+    }
+
+    pub fn sendmobile(&self,payment: Payment, phone: &'static str, method: &'static str)  {
+        unimplemented!()
+
     }
 
     //TODO write send mobile method
     // Purpose : to send or initiate an express checkout / mobile payment
     // mo
     // SendMobile(payment,phone, method) -> InitResponse	
-
-
-    }
+}
 
 
 /// Helper for composing transactions before posting to Paynow
@@ -130,6 +143,5 @@ impl Payment {
         };
         amt
     }
-    
     // need to get polls status.....
 }
