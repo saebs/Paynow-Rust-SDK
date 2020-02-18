@@ -9,7 +9,7 @@ use reqwest::Client;
 use hyper::Request;
 
 use std::collections::{HashMap};
-use crate::properties::*;
+use crate::types::*;
 use crate::responses::*;
 use crate::transactions::*;
 use std::num::ParseFloatError;

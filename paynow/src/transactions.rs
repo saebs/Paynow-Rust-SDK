@@ -1,6 +1,6 @@
 use serde::Deserialize;
 use serde::Serialize;
-use crate::properties::*;
+use crate::types::*;
 
 /// Initiate Transaction
 /// When the customer is ready to make payment the merchant site must

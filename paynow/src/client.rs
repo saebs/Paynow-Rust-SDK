@@ -1,4 +1,4 @@
-use reqwest::Client;
+// use reqwest::Client;
 
 // just an abstraction to make easier to use
 

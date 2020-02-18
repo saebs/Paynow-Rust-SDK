@@ -1,6 +1,6 @@
 // Reusables module Generics and Traits 
 use std::collections::HashMap;
-use crate::properties::*;
+use crate::types::*;
 type WasSuccessful = bool;
 
 trait Response {

@@ -9,7 +9,7 @@ email: sabelo.n@yandex.com
 /// Core Paynow functionality 
 pub mod core;
 /// Paynow API endpoints, Standard constants, web form "tags" and other implementation defaults 
-pub mod properties;
+pub mod types;
 /// General utilities and helper code for e.g. hash creation, verification , Data Collection and formatting
 pub mod utils;
 /// Http Responses formats or models
