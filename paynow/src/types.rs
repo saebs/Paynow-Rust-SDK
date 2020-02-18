@@ -1,29 +1,32 @@
 /********************************
 Copyright (c) Webenchanter
-Author: Sabelo Ntabeni 
+Author: Sabelo Ntabeni
 email: sabelo.n@yandex.com
-*******************************/ 
+*******************************/
 
-use std::fmt;
 use serde::{Deserialize, Serialize};
+use std::fmt;
 
 // Paynow API Endpoints
-pub const URL_INITIATE_TRANSACTION: &'static str = "https://www.paynow.co.zw/interface/initiatetransaction";
-pub const URL_INITIATE_EXPRESS_CHECKOUT_TRANSACTION: &'static str = "https://www.paynow.co.zw/interface/remotetransaction";
-pub const URL_INITIATE_PASSENGER_TICKET_TRANSACTION: &'static str = "https://www.paynow.co.zw/interface/initiatetickettransaction";
+pub const URL_INITIATE_TRANSACTION: &'static str =
+    "https://www.paynow.co.zw/interface/initiatetransaction";
+pub const URL_INITIATE_EXPRESS_CHECKOUT_TRANSACTION: &'static str =
+    "https://www.paynow.co.zw/interface/remotetransaction";
+pub const URL_INITIATE_PASSENGER_TICKET_TRANSACTION: &'static str =
+    "https://www.paynow.co.zw/interface/initiatetickettransaction";
 
 // Paynow fields or Attributes Directory
 pub const RESULTURL: &'static str = "resulturl";
 pub const RETURNURL: &'static str = "returnurl";
-pub const REFERENCE: &'static str = "reference";        
-pub const AMOUNT: &'static str    = "amount";
-pub const ID: &'static str        = "id";
-pub const ADDITIONAL_INFO: &'static str  = "additionalinfo";
-pub const AUTHEMAIL: &'static str       = "authemail";
-pub const STATUS: &'static str  = "status";          
-pub const ERROR: &'static str  = "error";
+pub const REFERENCE: &'static str = "reference";
+pub const AMOUNT: &'static str = "amount";
+pub const ID: &'static str = "id";
+pub const ADDITIONAL_INFO: &'static str = "additionalinfo";
+pub const AUTHEMAIL: &'static str = "authemail";
+pub const STATUS: &'static str = "status";
+pub const ERROR: &'static str = "error";
 pub const TOKENIZE: &'static str = "tokenize";
-pub const HASH: &'static str  = "hash";
+pub const HASH: &'static str = "hash";
 pub const BROWSERURL: &'static str = "browserurl";
 pub const POLLURL: &'static str = "pollurl";
 pub const METHOD: &'static str = "method";
@@ -51,46 +54,43 @@ pub const ARRIVAL_TIME: &'static str = "arrivaltime";
 pub const JOURNEY_TYPE: &'static str = "journeytype";
 pub const COMPLETE_ROUTE: &'static str = "completeroute";
 
-
 //	String	(optional) Only returned for successful payments: Masked card number, mobile wallet MSISDN etc.
-pub const PAYMENTINSTRUMENT:	&'static str            =  "paymentinstrument";   
+pub const PAYMENTINSTRUMENT: &'static str = "paymentinstrument";
 //  String	(optional) Only returned for successful payments: Name of the channel used e.g. Visa, Mastercard, Ecocash
-pub const PAYMENTCHANNEL:  &'static str                 =  "paymentchannel";	    
+pub const PAYMENTCHANNEL: &'static str = "paymentchannel";
 // String	(optional) Only returned for successful payments:Cardholder Name";
-pub const PAYMENTINSTRUMENTNAME:&'static str	        =  "paymentinstrumentname";	
+pub const PAYMENTINSTRUMENTNAME: &'static str = "paymentinstrumentname";
 //String	(optional) Only returned for successful payments:Approval transaction code
-pub const PAYMENTCHANNELREFERENCE:	 &'static str       =  "paymentchannelreference";	
+pub const PAYMENTCHANNELREFERENCE: &'static str = "paymentchannelreference";
 //String	(optional) Only returned for successful payments:Electronic Commerce Indicator
-pub const PAYMENTCHANNELECI:	 &'static str           =  "paymentchanneleci";	
+pub const PAYMENTCHANNELECI: &'static str = "paymentchanneleci";
 //String	(optional) Payment Fraud Score
-pub const PAYMENTFRAUDSCORE:	 &'static str           =  "paymentfraudscore";	
+pub const PAYMENTFRAUDSCORE: &'static str = "paymentfraudscore";
 //String	(optional) Issue, Request Manual Review, Reject
-pub const PAYMENTFRAUDDECISION:	  &'static str          =  "paymentfrauddecision";	
+pub const PAYMENTFRAUDDECISION: &'static str = "paymentfrauddecision";
 //String	(optional) Only returned for successful payments: Domestic or Foreign
-pub const PAYMENTINSTRUMENTNATIONALITY:	 &'static str   =  "paymentinstrumentnationality";	
+pub const PAYMENTINSTRUMENTNATIONALITY: &'static str = "paymentinstrumentnationality";
 
-
-
-//Merchant defaults 
+//Merchant defaults
 pub const URL_MERCHANT_LOCALHOST: &'static str = "http://localhost";
 
 #[derive(Serialize, Deserialize)]
 pub enum Status {
-    /// When Initiating Transaction this status is set by Merchant 
+    /// When Initiating Transaction this status is set by Merchant
     Message,
 
-    /// If the initiate transaction request is successful 
-    // 'Ok' is reserved so we'll use just 'Okay' to reduce ambiguity, go argue with your ancestors. 
+    /// If the initiate transaction request is successful
+    // 'Ok' is reserved so we'll use just 'Okay' to reduce ambiguity, go argue with your ancestors.
     Okay,
 
-    /// If the initiate transaction request failed 
-    Error, 
+    /// If the initiate transaction request failed
+    Error,
 
     /// Paid  Transaction paid successfully, the merchant will receive the funds
     /// at next settlement.
     Paid,
 
-    /// Awaiting Delivery Transaction paid successfully, but is sitting in 
+    /// Awaiting Delivery Transaction paid successfully, but is sitting in
     /// suspense waiting on the merchant to confirm delivery of the goods.
     AwaitingDelivery,
 
@@ -101,14 +101,14 @@ pub enum Status {
     /// Created Transaction has been created in Paynow, but has not yet been paid by the customer.
     Created,
 
-    /// Sent Transaction has been created in Paynow and an up stream system, 
+    /// Sent Transaction has been created in Paynow and an up stream system,
     /// the customer has been referred to that upstream system but has not yet made payment.
     Sent,
 
     /// Cancelled The transaction has been cancelled in Paynow and may not be resumed and needs to be recreated.
     Cancelled,
 
-    /// Disputed Transaction has been disputed by the Customer and funds are being held in suspense until 
+    /// Disputed Transaction has been disputed by the Customer and funds are being held in suspense until
     /// the dispute has been resolved.
     Disputed,
 
@@ -133,16 +133,15 @@ impl fmt::Display for Status {
             Status::Cancelled => write!(field, "Cancelled"),
             Status::Disputed => write!(field, "Disputed"),
             Status::Refunded => write!(field, "Refunded"),
-            Status::Pending3ds => write!(field, "Pending 3ds")
+            Status::Pending3ds => write!(field, "Pending 3ds"),
         }
     }
 }
 
-
 /// Options for Passenger Ticket Transaction
 #[derive(Debug, Serialize, Deserialize)]
 pub enum Passenger {
-    // ADT  Adult	
+    // ADT  Adult
     Adt,
     // CNN Child
     Cnn,
@@ -159,7 +158,7 @@ pub enum Passenger {
 }
 
 impl fmt::Display for Passenger {
-    fn fmt(&self, field: & mut fmt::Formatter) -> fmt::Result {
+    fn fmt(&self, field: &mut fmt::Formatter) -> fmt::Result {
         match *self {
             Passenger::Adt => write!(field, "Adult"),
             Passenger::Cnn => write!(field, "Child"),
@@ -169,14 +168,13 @@ impl fmt::Display for Passenger {
             Passenger::Stu => write!(field, "Student"),
             Passenger::Yth => write!(field, "Youth"),
         }
-
     }
 }
 
-///  Mode of payment when using Mobile Money and or Credit/ Debit Cards 
+///  Mode of payment when using Mobile Money and or Credit/ Debit Cards
 #[derive(Debug, Serialize, Deserialize)]
 pub enum PaymentMethod {
-    Ecocash,     
+    Ecocash,
     OneMoney,
     Telecash,
     Visa,
@@ -187,23 +185,20 @@ impl fmt::Display for PaymentMethod {
     fn fmt(&self, method: &mut fmt::Formatter) -> fmt::Result {
         match *self {
             // Some methods like telecash or onemoney may not be supported yet
-            // but have been included , just incase 
+            // but have been included , just incase
             PaymentMethod::Ecocash => write!(method, "ecocash"),
             PaymentMethod::OneMoney => write!(method, "onemoney"),
             PaymentMethod::Telecash => write!(method, "telecash"),
 
             // 'vmc' , Visa/Mastercard
-            //Paynow doesnt make the distinction but we do... 
+            //Paynow doesnt make the distinction but we do...
             PaymentMethod::Visa => write!(method, "vmc"),
             PaymentMethod::MasterCard => write!(method, "vmc"),
         }
     }
 }
 
-
-
-
-// Credit / Debit card information 
+// Credit / Debit card information
 #[derive(Debug, Serialize, Deserialize)]
 pub struct Card {
     // Numeric	The Visa/Mastercard PAN
@@ -212,7 +207,7 @@ pub struct Card {
     cardname: String,
     // Numeric	3 or 4 digits from rear of card
     cardcvv: u16,
-	// Numeric	6 digit card expiry date (MMYYYY) e.g. 052018
+    // Numeric	6 digit card expiry date (MMYYYY) e.g. 052018
     cardexpiry: u32,
     // String	Customer’s billing address
     billingline1: String,
@@ -223,5 +218,5 @@ pub struct Card {
     // String	Not required but will assist with fraud detection
     billingprovince: String,
     // String	Customer’s billing address country
-    billingcountry:  String,
+    billingcountry: String,
 }

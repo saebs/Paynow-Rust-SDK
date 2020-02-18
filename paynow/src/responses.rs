@@ -1,21 +1,15 @@
-// Reusables module Generics and Traits 
-use std::collections::HashMap;
+// Reusables module Generics and Traits
 use crate::types::*;
+use std::collections::HashMap;
 type WasSuccessful = bool;
 
 trait Response {
-     ///     Get the original data sent from Paynow
-    fn get_data(&self, source: HashMap<&'static str, &'static str>) {
+    ///     Get the original data sent from Paynow
+    fn get_data(&self, source: HashMap<&'static str, &'static str>) {}
+    ///     Returns the poll URL sent from Paynow
+    fn poll_url<T>(&self, uri: T) {}
 
-    }
-   ///     Returns the poll URL sent from Paynow
-    fn poll_url<T>(&self, uri: T) {
-
-    }
-
-    fn redirect_link<T>(&self, redirect: T) {
-
-    }
+    fn redirect_link<T>(&self, redirect: T) {}
 
     fn success(&self) -> WasSuccessful {
         false
@@ -23,9 +17,7 @@ trait Response {
 
     ///     Reads through the response data sent from Paynow
     /// load()
-    fn load() {
-
-    }
+    fn load() {}
 }
 
 /*
@@ -50,7 +42,7 @@ success: boolean;
 
 */
 
-pub struct InitResponse<T,V>{
+pub struct InitResponse<T, V> {
     data: HashMap<T, V>,
     // success: boolean;
     has_redirect: bool,
@@ -61,27 +53,24 @@ pub struct InitResponse<T,V>{
     status: Status,
 }
 
-impl Response for InitResponse<String, String>{
+impl Response for InitResponse<String, String> {
     fn success(&self) -> WasSuccessful {
         match self.status {
             Status::Paid => true,
             Status::AwaitingDelivery => true,
             _ => false,
         }
-
     }
-
 }
 
 pub struct StatusResponse {
     reference: &'static str,
-    amount: &'static str,	
-    paynow_reference: &'static str,	
+    amount: &'static str,
+    paynow_reference: &'static str,
     pollurl: &'static str,
     status: Status,
     hash: &'static str,
 }
-
 
 impl Response for StatusResponse {
     fn success(&self) -> WasSuccessful {
