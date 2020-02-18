@@ -5,6 +5,7 @@ email: sabelo.n@yandex.com
 *******************************/ 
 
 use std::fmt;
+use serde::{Deserialize, Serialize};
 
 // Paynow API Endpoints
 pub const URL_INITIATE_TRANSACTION: &'static str = "https://www.paynow.co.zw/interface/initiatetransaction";
@@ -73,6 +74,7 @@ pub const PAYMENTINSTRUMENTNATIONALITY:	 &'static str   =  "paymentinstrumentnat
 //Merchant defaults 
 pub const URL_MERCHANT_LOCALHOST: &'static str = "http://localhost";
 
+#[derive(Serialize, Deserialize)]
 pub enum Status {
     /// When Initiating Transaction this status is set by Merchant 
     Message,
@@ -138,7 +140,7 @@ impl fmt::Display for Status {
 
 
 /// Options for Passenger Ticket Transaction
-// #[derive(Clone, Debug, Serialize, Deserialize, PartialEq)]
+#[derive(Debug, Serialize, Deserialize)]
 pub enum Passenger {
     // ADT  Adult	
     Adt,
@@ -172,7 +174,7 @@ impl fmt::Display for Passenger {
 }
 
 ///  Mode of payment when using Mobile Money and or Credit/ Debit Cards 
-// #[derive(Clone, Debug, Serialize, Deserialize, PartialEq)]
+#[derive(Debug, Serialize, Deserialize)]
 pub enum PaymentMethod {
     Ecocash,     
     OneMoney,
@@ -202,7 +204,7 @@ impl fmt::Display for PaymentMethod {
 
 
 // Credit / Debit card information 
-// #[derive(Clone, Debug, Serialize, Deserialize, PartialEq)]
+#[derive(Debug, Serialize, Deserialize)]
 pub struct Card {
     // Numeric	The Visa/Mastercard PAN
     cardnumber: usize,
