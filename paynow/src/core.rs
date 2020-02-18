@@ -7,6 +7,7 @@ email: sabelo.n@yandex.com
 
 use hyper::Request;
 use reqwest::Client;
+use serde::{Serialize, Deserialize};
 
 use crate::responses::*;
 use crate::transactions::*;
@@ -82,22 +83,6 @@ impl Paynow {
     }
     /// Build Transaction helper
     fn build(&self, payment: &mut Payment) {
-        let mut dat: HashMap<&'static str, String> = HashMap::new();
-        dat.insert(ID, self.integration_id.to_owned());
-        dat.insert(REFERENCE, payment.reference.to_owned());
-        dat.insert(AMOUNT, payment.sum().to_string());
-        dat.insert(ADDITIONAL_INFO, payment.additionalinfo.to_owned());
-        dat.insert(RETURNURL, self.returnurl.to_owned());
-        dat.insert(RESULTURL, self.resulturl.to_owned());
-        dat.insert(AUTHEMAIL, payment.auth_email.to_owned());
-        if self.tokenize {
-            dat.insert(TOKENIZE, "True".to_owned());
-        }
-        dat.insert(STATUS, Status::Message.to_string());
-        dat.insert(HASH, "GENHASHHERE".to_owned());
-
-        //
-
         let mut currenttxn = InitTxn {
             id: self.integration_id.to_owned(),
             reference: payment.reference.to_owned(),
@@ -116,7 +101,7 @@ impl Paynow {
 
         let mut pre_post = String::new();
 
-        let current_copy = currenttxn.clone();
+        let current_copy = currenttxn.clone(); // needs to be refactored soon!!
 
         for value in current_copy {
             pre_post.push_str(&value);
@@ -129,7 +114,7 @@ impl Paynow {
     // Purpose: to send or init regular payment request
     // Sign: send(payment) -> InitResponse
     /// Request to initialise a transaction
-    pub fn send(&self, payment: Payment) {
+    pub fn send(&self, payment: Payment) -> impl Serialize + Deserialize {
         //initiate new clients and send req
 
         // determine payment method
