@@ -158,6 +158,15 @@ impl Payment {
             requests: InitTxn::new(),
         }
     }
+
+    /// Payment reference setter
+    pub fn set_reference(&mut self, reference: &'static str) {
+        self.reference = reference;
+    }
+    /// Authentication email setter
+    pub fn set_authemail(&mut self, auth_email: &'static str) {
+        self.auth_email = auth_email;
+    }
     /// Add item to trolley ehe
     // Paynow recommends max of two decimal places for amounts
     pub fn add(&mut self, item: &'static str, price: &str) -> Result<(), ParseFloatError> {

@@ -110,4 +110,11 @@ mod tests {
         let _check2 = "1201TEST REF99.99A test ticket transactionhttp://www.google.com/search?q=returnurlhttp://www.google.com/search?q=resulturlMessage";
         assert_eq!(concat_values_to_str(txn), check1);
     }
+
+    #[test]
+    fn sends_request() {
+        let mut album = Paynow::new();
+        
+}
+
 }
