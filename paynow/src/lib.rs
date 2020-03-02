@@ -22,10 +22,10 @@ pub mod client;
 #[cfg(test)]
 mod tests {
     use crate::core::{Payment, Paynow};
-    use crate::utils::*;
-    use std::collections::{BTreeMap, HashMap};
     use crate::transactions::*;
     use crate::types::*;
+    use crate::utils::*;
+    use std::collections::{BTreeMap, HashMap};
     #[test]
     fn creates_paynow_instance() {
         let paynow: Paynow = Paynow::new();
@@ -49,7 +49,6 @@ mod tests {
             additionalinfo: "",
             amount: 0,
             requests: InitTxn::new(),
-            
         };
 
         assert_eq!(format!("{:?}", gimme_my_money), format!("{:?}", nah));
@@ -114,7 +113,7 @@ mod tests {
     #[test]
     fn sends_request() {
         let mut album = Paynow::new();
-        
-}
-
+        let payment = album.create_payment("bulk 001", "buyer@bagi.com");
+        album.send(payment);
+    }
 }

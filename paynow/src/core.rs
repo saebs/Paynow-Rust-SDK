@@ -7,12 +7,12 @@ email: sabelo.n@yandex.com
 
 use hyper::Request;
 use reqwest::Client;
-use serde::{Serialize, Deserialize};
+use serde::{Deserialize, Serialize};
 
 use crate::responses::*;
 use crate::transactions::*;
-use crate::types::*;
-use crate::utils::*;
+use crate::types::{PaymentMethod,Status};
+use crate::utils;
 use std::collections::HashMap;
 use std::num::ParseFloatError;
 
@@ -107,7 +107,7 @@ impl Paynow {
             pre_post.push_str(&value);
         }
 
-        currenttxn.hash = hash_make(&pre_post, self.integration_key);
+        currenttxn.hash = utils::hash_make(&pre_post, self.integration_key);
     }
 
     // TODO , iwrite send or init transaction functionality
@@ -142,7 +142,7 @@ pub struct Payment {
     pub auth_email: &'static str,            // Users email address
     pub additionalinfo: &'static str,
     pub amount: usize,
-    pub requests: InitTxn
+    pub requests: InitTxn,
 }
 
 //Personal notes
