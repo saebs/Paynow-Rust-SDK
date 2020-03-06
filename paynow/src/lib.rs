@@ -1,5 +1,4 @@
 /********************************
-Copyright (c) Webenchanter
 Author: Sabelo Ntabeni
 email: sabelo.n@yandex.com
 *******************************/
