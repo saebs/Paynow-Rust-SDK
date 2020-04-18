@@ -18,13 +18,17 @@ pub mod utils;
 
 pub mod client;
 
+pub mod intf;
+
 #[cfg(test)]
 mod tests {
     use crate::core::{Payment, Paynow};
     use crate::transactions::*;
     use crate::types::*;
     use crate::utils::*;
+    use crate::intf::Transact;
     use std::collections::{BTreeMap, HashMap};
+    
     #[test]
     fn creates_paynow_instance() {
         let paynow: Paynow = Paynow::new();
@@ -47,7 +51,7 @@ mod tests {
             auth_email: "",        // Users email address
             additionalinfo: "",
             amount: 0,
-            requests: InitTxn::new(),
+            requests: String::from("nothing"),
         };
 
         assert_eq!(format!("{:?}", gimme_my_money), format!("{:?}", nah));
@@ -79,14 +83,14 @@ mod tests {
             auth_email: "your@email.com",
             additionalinfo: "",
             amount: 0usize,
-            requests: InitTxn::new(),
+            requests: String::from("foo"),
         };
 
         assert_eq!(imbadalo.create_payment("000", "your@email.com"), payment);
         // let just test the sum method here
         assert_eq!(0, payment.sum())
     }
-
+    
     #[test]
     fn hash_util() {
         let message = "1201TEST REF99.99A test ticket transactionhttp://www.google.com/search?q=returnurlhttp://www.google.com/search?q=resulturlMessage";
