@@ -58,7 +58,7 @@ impl Paynow {
             auth_email,
             additionalinfo: "",
             amount: 0usize,
-            requests: InitTxn::new(),
+            requests: "foo".to_owned(),
         }
     }
 
@@ -81,33 +81,6 @@ impl Paynow {
         paynow
     }
     /// Build Transaction helper
-    fn build(&self, payment: &mut Payment) {
-        let mut currenttxn = InitTxn {
-            id: self.integration_id.to_owned(),
-            reference: payment.reference.to_owned(),
-            amount: payment.sum().to_string(),
-            additionalinfo: payment.additionalinfo.to_owned(),
-            returnurl: self.returnurl.to_owned(),
-            resulturl: self.resulturl.to_owned(),
-            authemail: payment.auth_email.to_owned(),
-            tokenize: self.tokenize.to_string(),
-            status: Status::Message.to_string(),
-            hash: String::new(),
-            // generate hash from these value then add hash
-        };
-
-        // loop over, parse and create string for hashing
-
-        let mut pre_post = String::new();
-
-        let current_copy = currenttxn.clone(); // needs to be refactored soon!!
-
-        for value in current_copy {
-            pre_post.push_str(&value);
-        }
-
-        currenttxn.hash = utils::hash_make(&pre_post, self.integration_key);
-    }
 
     // TODO , iwrite send or init transaction functionality
     // Purpose: to send or init regular payment request
@@ -141,7 +114,7 @@ pub struct Payment {
     pub auth_email: &'static str,            // Users email address
     pub additionalinfo: &'static str,
     pub amount: usize,
-    pub requests: InitTxn,
+    pub requests: String,
 }
 
 //Personal notes
@@ -154,7 +127,7 @@ impl Payment {
             auth_email: "",
             additionalinfo: "",
             amount: 0usize,
-            requests: InitTxn::new(),
+            requests: String::from("nothing"),
         }
     }
 
