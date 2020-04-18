@@ -1,94 +1,29 @@
+use crate::intf::Transact;
 use crate::types::*;
 use serde::Deserialize;
-use serde::Serialize;
+//use serde::Serialize;
+use std::fmt;
+use serde::ser::{Serialize, Serializer, SerializeStruct};
+use std::collections::HashMap;
 
-/// Initiate Transaction
-/// When the customer is ready to make payment the merchant site must
-/// perform an Initiate Transaction request.
-#[derive(Serialize, Deserialize, Clone, Debug, PartialEq)]
-pub struct InitTxn {
-    pub id: String,
-    pub reference: String,
-    pub amount: String,
-    pub additionalinfo: String,
-    pub returnurl: String,
-    pub resulturl: String,
-    pub authemail: String,
-    pub tokenize: String,
-    pub status: String,
-    pub hash: String,
-}
+type WebForm = HashMap<&'static str, &'static str>;
 
-impl InitTxn {
-    pub fn new() -> InitTxn {
-        InitTxn {
-            id: "".to_string(),
-            reference: "".to_string(),
-            amount: "".to_string(),
-            additionalinfo: "".to_string(),
-            returnurl: "".to_string(),
-            resulturl: "".to_string(),
-            authemail: "".to_string(),
-            tokenize: "".to_string(),
-            status: "".to_string(),
-            hash: "".to_string(),
-        }
-    }
-}
-
-impl IntoIterator for InitTxn {
-    type Item = String;
-    type IntoIter = InitTxnIntoIterator;
-    fn into_iter(self) -> Self::IntoIter {
-        InitTxnIntoIterator {
-            inittxn: self,
-            index: 0,
-        }
-    }
-}
-
-pub struct InitTxnIntoIterator {
-    inittxn: InitTxn,
-    index: usize,
-}
-
-impl Iterator for InitTxnIntoIterator {
-    type Item = String;
-    fn next(&mut self) -> Option<String> {
-        let result = match self.index {
-            0 => &self.inittxn.id,
-            1 => &self.inittxn.reference,
-            2 => &self.inittxn.amount,
-            3 => &self.inittxn.additionalinfo,
-            4 => &self.inittxn.returnurl,
-            5 => &self.inittxn.resulturl,
-            6 => &self.inittxn.authemail,
-            7 => &self.inittxn.tokenize,
-            8 => &self.inittxn.status,
-            9 => &self.inittxn.hash,
-            _ => return None,
-        };
-        self.index += 1;
-        Some(result.to_string())
-    }
-}
-
-// NOT CONSUMED ITERATOR soon
-
-/// Express Checkout Transaction
-#[derive(Serialize, Deserialize, Debug)]
-pub struct InitExpressTxn {
-    id: String,
+#[derive(Debug,PartialEq)]
+pub struct Transaction {
+    id: i64,
     reference: String,
-    amount: String,
+    amount: i64,
     additionalinfo: String,
     returnurl: String,
     resulturl: String,
-    tokenize: String,
-    status: String,
-    method: String,
+    authemail: String,
+    tokenize: bool,
+    merchanttrace: String,
+    status: Status,
+    // Extra requrements for Express or Mobile
+    method: PaymentMethod,
     phone: String,
-    cardnumber: String,
+    cardnumber: String, //numeric
     cardname: String,
     cardcvv: String,
     cardexpiry: String,
@@ -97,12 +32,196 @@ pub struct InitExpressTxn {
     billingcity: String,
     billingprovince: String,
     billingcountry: String,
+    token: String,
     hash: String,
 }
 
-#[derive(Deserialize, Serialize)]
+impl Transact for Transaction {
+    // new
+    fn new() -> Self {
+        Transaction {
+            id: 0,
+            reference: String::new(),
+            amount: 0,
+            additionalinfo: String::new(),
+            returnurl: String::new(),
+            resulturl: String::new(),
+            authemail: String::new(),
+            tokenize: false,
+            merchanttrace: String::new(),
+            status: Status::Message,
+            // Extra requrements for Express or Mobile
+            method: PaymentMethod::Other,
+            phone: String::new(),
+            cardnumber: String::new(), //numeric
+            cardname: String::new(),
+            cardcvv: String::new(),
+            cardexpiry: String::new(),
+            billingline1: String::new(),
+            billingline2: String::new(),
+            billingcity: String::new(),
+            billingprovince: String::new(),
+            billingcountry: String::new(),
+            token: String::new(),
+            hash: String::new(),
+        }
+    }
+
+    //init
+
+    /// Formats a transaction to specific urlencoded string for each transaction type 
+    /// Init 
+    fn init(&self) -> String {
+
+    // Decided to hard encode each to get deterministic behaviour when hashing each transaction type
+        let initialisetxn: String = format!("id={}&reference={}&amount={}&additionalinfo={}&returnurl={}&resulturl={}&authemail={}&tokenize={}&merchanttrace={}&status={}&hash={}",
+            self.id,
+            self.reference ,
+            self.amount ,
+            self.additionalinfo, 
+            self.returnurl ,
+            self.resulturl ,
+            self.authemail ,
+            self.tokenize ,
+            self.merchanttrace ,
+            self.status ,
+            self.hash);
+
+            // could have made a copy and concatenanted but would have been expensive
+        let initialisemobile: String = format!("id={}&reference={}&amount={}&additionalinfo={}&returnurl={}&resulturl={}&authemail={}&tokenize={}&merchanttrace={}&status={}&method={}&phone={}&hash={}",
+            self.id,
+            self.reference ,
+            self.amount ,
+            self.additionalinfo, 
+            self.returnurl ,
+            self.resulturl ,
+            self.authemail ,
+            self.tokenize ,
+            self.merchanttrace ,
+            self.status ,
+            self.method,
+            self.phone,
+            self.hash);
+            
+        let initialisevmc: String = format!("id={}&reference={}&amount={}&additionalinfo={}&returnurl={}&resulturl={}&authemail={}&tokenize={}&merchanttrace={}&status={}&method={}&phone={}&cardnumber={}&cardname={}&cardcvv={}&cardexpiry={}&billingline1={}&billingline2={}&billingcity={}&billingprovince={}&billingcountry={}&token={}&hash={}",
+            self.id,
+            self.reference ,
+            self.amount ,
+            self.additionalinfo, 
+            self.returnurl ,
+            self.resulturl ,
+            self.authemail ,
+            self.tokenize ,
+            self.merchanttrace ,
+            self.status ,
+            self.method,
+            self.phone,
+            self.cardnumber,
+            self.cardname,
+            self.cardcvv,
+            self.cardexpiry,
+            self.billingline1,
+            self.billingline2,
+            self.billingcity,
+            self.billingprovince,
+            self.billingcountry,
+            self.token,
+            self.hash);
+        
+        
+        
+        match self.method {
+            PaymentMethod::Ecocash | PaymentMethod::OneMoney | PaymentMethod::Telecash => {
+                initialisemobile
+            },
+            PaymentMethod::MasterCard | PaymentMethod::Visa => {
+                initialisevmc
+            },
+            PaymentMethod::Other => initialisetxn,
+        }
+    }
+    
+    fn load(data: WebForm) {
+        let form_data: WebForm = data;
+        for (key, value) in form_data.iter() {
+        // sanitize input below, to lower etc
+            match key {
+            ID => {self.id = value},
+            REFERENCE => {self.reference = value},
+            AMOUNT => {self.amount = value},
+            ADDITIONAL_INFO => {self.additionalinfo = value},
+            RETURNURL => {self.returnurl = value},
+            RESULTURL => {self.resulturl = value},
+            AUTHEMAIL => {self.authemail = value},
+            TOKENIZE => {self.tokenize = value},
+            MERCHANTTRACE => {self.merchanttrace = value},
+            STATUS => {self.status = value},
+            METHOD => {self.method = value},
+            PHONE => {self.phone = value},
+            CARDNUMBER => {self.cardnumber = value},
+            CARDNAME => {self.cardname = value},
+            CARDCVV => {self.cardcvv = value},
+            CARDEXPIRY => {self.cardexpiry = value},
+            BILLINGLINE1 => {self.billingline1 = value},
+            BILLINGLINE2 => {self.billingline2 = value},
+            BILLINGCITY => {self.billingcity = value},
+            BILLINGCOUNTRY => {self.billingcountry = value},
+            BILLINGPROVINCE => {self.billingprovince = value},
+            TOKEN => {self.token = value},
+            _ => {},
+            
+            }
+        
+        } 
+        
+    }
+}// transaction end
+
+
+
+#[derive(Deserialize)]
 pub struct Init3ds {
     pareq: String,
     md: String, //As per express checkout response from Paynow
     termurl: String,
 }
+
+
+
+
+
+#[test]
+    fn new_transaction1(){
+    
+           let trans0 = Transaction {
+            id: 0,
+            reference: String::new(),
+            amount: 0,
+            additionalinfo: String::new(),
+            returnurl: String::new(),
+            resulturl: String::new(),
+            authemail: String::new(),
+            tokenize: false,
+            merchanttrace: String::new(),
+            status: Status::Message,
+            // Extra requrements for Express or Mobile
+            method: PaymentMethod::Other,
+            phone: String::new(),
+            cardnumber: String::new(), //numeric
+            cardname: String::new(),
+            cardcvv: String::new(),
+            cardexpiry: String::new(),
+            billingline1: String::new(),
+            billingline2: String::new(),
+            billingcity: String::new(),
+            billingprovince: String::new(),
+            billingcountry: String::new(),
+            token: String::new(),
+            hash: String::new(),
+        };
+        
+        assert_eq!(trans0, Transaction::new());
+        
+
+    
+    }

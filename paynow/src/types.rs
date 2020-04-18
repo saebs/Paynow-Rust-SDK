@@ -25,6 +25,7 @@ pub const AUTHEMAIL: &'static str = "authemail";
 pub const STATUS: &'static str = "status";
 pub const ERROR: &'static str = "error";
 pub const TOKENIZE: &'static str = "tokenize";
+pub const MERCHANTTRACE: &'static str = "merchanttrace";
 pub const HASH: &'static str = "hash";
 pub const BROWSERURL: &'static str = "browserurl";
 pub const POLLURL: &'static str = "pollurl";
@@ -35,6 +36,26 @@ pub const PAYNOW_REFERENCE: &'static str = "paynowreference";
 pub const TOKEN: &'static str = "token";
 pub const TOKEN_EXPIRY: &'static str = "tokenexpiry";
 pub const PHONE: &'static str = "phone";
+
+// Credit/ Debit Card info
+pub const CARDNUMBER: &'static str = "cardnumber";
+    // Name printed on front of card
+pub const CARDNAME: &'static str = "cardname";
+    // Numeric	3 or 4 digits from rear of card
+pub const CARDCVV: &'static str = "cardcvv";
+    // Numeric	6 digit card expiry date (MMYYYY) e.g. 052018
+pub const CARDEXPIRY: &'static str = "cardexpiry";
+    // String	Customer’s billing address
+pub const BILLINGLINE1: &'static str = "billingline1";
+    // String	Not required but will assist with fraud detection
+pub const BILLINGLINE2: &'static str = "billingline2";
+    // String	Customer’s billing address city
+pub const BILLINGCITY: &'static str = "billingcity";
+    // String	Not required but will assist with fraud detection
+pub const BILLINGPROVINCE: &'static str = "billingprovince";
+    // String	Customer’s billing address country
+pub const BILLINGCOUNTRY: &'static str = "billingcountry";
+
 // passenger ticket extra fields
 pub const PRIMARY_TICKET_NUMBER: &'static str = "primaryticketnumber";
 pub const PASSENGER_FIRSTNAME: &'static str = "passengerfirstname";
@@ -73,7 +94,7 @@ pub const PAYMENTINSTRUMENTNATIONALITY: &'static str = "paymentinstrumentnationa
 //Merchant defaults
 pub const URL_MERCHANT_LOCALHOST: &'static str = "http://localhost";
 
-#[derive(Serialize, Deserialize)]
+#[derive(Serialize, Deserialize, PartialEq,Debug)]
 pub enum Status {
     /// When Initiating Transaction this status is set by Merchant
     Message,
@@ -125,7 +146,7 @@ impl fmt::Display for Status {
             Status::Okay => write!(field, "Ok"),
             Status::Error => write!(field, "Error"),
             Status::Paid => write!(field, "Paid"),
-            Status::AwaitingDelivery => write!(field, "Awaiting Delivery"),
+            Status::AwaitingDelivery => write!(field, "AwaitingDelivery"),
             Status::Delivered => write!(field, "Delivered"),
             Status::Created => write!(field, "Created"),
             Status::Sent => write!(field, "Sent"),
@@ -171,13 +192,14 @@ impl fmt::Display for Passenger {
 }
 
 ///  Mode of payment when using Mobile Money and or Credit/ Debit Cards
-#[derive(Debug, Serialize, Deserialize)]
+#[derive(Debug, Serialize, Deserialize, PartialEq)]
 pub enum PaymentMethod {
     Ecocash,
     OneMoney,
     Telecash,
     Visa,
     MasterCard,
+    Other,
 }
 
 impl fmt::Display for PaymentMethod {
@@ -193,6 +215,7 @@ impl fmt::Display for PaymentMethod {
             //Paynow doesnt make the distinction but we do...
             PaymentMethod::Visa => write!(method, "vmc"),
             PaymentMethod::MasterCard => write!(method, "vmc"),
+            PaymentMethod::Other => write!(method, "")
         }
     }
 }
