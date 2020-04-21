@@ -192,7 +192,7 @@ impl fmt::Display for Passenger {
 }
 
 ///  Mode of payment when using Mobile Money and or Credit/ Debit Cards
-#[derive(Debug, Serialize, Deserialize, PartialEq)]
+#[derive(Debug, Serialize, Deserialize, PartialEq )]
 pub enum PaymentMethod {
     Ecocash,
     OneMoney,
@@ -241,4 +241,14 @@ pub struct Card {
     billingprovince: String,
     // String	Customer’s billing address country
     billingcountry: String,
+}
+
+
+#[cfg(test)]
+mod tests {
+    #[test]
+    fn describe_test() {
+    // Prove that 1 ->  ~2 
+        assert_eq!(1 , 1);
+    }
 }

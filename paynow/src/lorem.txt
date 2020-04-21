@@ -15,3 +15,30 @@ Content-Type: application/x-www-form-urlencoded
 Content-Length: 27
 
 field1=value1&field2=value2
+
+let dict: Vec<&'static str> = {
+
+    "id",
+    "reference" 
+    "amount",
+    "additionalinfo" ,
+    "returnurl" ,
+    "resulturl" ,
+    "authemail" ,
+    "tokenize" ,
+    "merchanttrace" ,
+    "status" ,
+    "method" ,
+    "phone" ,
+    "cardnumber" , //numeric
+    "cardname" ,
+    "cardcvv" ,
+    "cardexpiry" ,
+    "billingline1" ,
+    "billingline2" ,
+    "billingcity" ,
+    "billingprovince" ,
+    "billingcountry" ,
+    "token" ,
+   // "hash" ,
+};

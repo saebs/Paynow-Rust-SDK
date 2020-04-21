@@ -4,14 +4,14 @@ email: sabelo.n@yandex.com
 *******************************/
 //  Rust SDK for Paynow Zimbabwe's API
 
-use hyper::Request;
-use reqwest::Client;
+// use hyper::Request;
+// use reqwest::Client;
 use serde::{Deserialize, Serialize};
 
-use crate::responses::*;
-use crate::transactions::*;
-use crate::types::{PaymentMethod,Status};
-use crate::utils;
+// use crate::responses::*;
+// use crate::transactions::*;
+// use crate::types::{PaymentMethod,Status};
+// use crate::utils;
 use std::collections::HashMap;
 use std::num::ParseFloatError;
 
@@ -35,7 +35,7 @@ StatusResponse	ProcessStatusUpdate(Dictionary<String, String> response)
 InitResponse	Send(Payment payment)
 InitResponse	SendMobile(Payment payment, String phone, MobileMoneyMethod method = Ecocash)
 */
-
+#[allow(dead_code)]
 impl Paynow {
     /// Creates an empty instance for Paynow Type
     pub fn new() -> Self {
@@ -67,21 +67,12 @@ impl Paynow {
     // or JSON i dont know.
     // To KISS it we will use a hashmap
     /// NB: Not production ready,
+    #[allow(dead_code)]
     pub fn from<T>(data_src: T) -> Self {
-        // TODO Fix this nonsense before  putting to production`
         // supposed to parse json, xml or csv
-
-        let paynow = Paynow {
-            integration_id: "kung",
-            integration_key: "foo",
-            returnurl: "",
-            resulturl: "",
-            tokenize: false,
-        };
-        paynow
+       unimplemented!() 
     }
-    /// Build Transaction helper
-
+    
     // TODO , iwrite send or init transaction functionality
     // Purpose: to send or init regular payment request
     // Sign: send(payment) -> InitResponse
@@ -89,14 +80,13 @@ impl Paynow {
     pub fn send(&self, payment: Payment) -> impl Serialize + Deserialize {
         //initiate new clients and send req
 
-        // determine payment method
-
         // set Transaction type requied to txn
 
         unimplemented!()
     }
 
     pub fn sendmobile(&self, payment: Payment, phone: &'static str, method: &'static str) {
+    // just adds mobile payment required info if not already loaded 
         unimplemented!()
     }
 
@@ -164,3 +154,14 @@ impl Payment {
     }
     // need to get polls status.....
 }
+
+
+#[cfg(test)]
+mod tests {
+    #[test]
+    fn describe_test() {
+    // Prove that 1 ->  ~2 
+        assert_eq!(1 , 1);
+    }
+}
+

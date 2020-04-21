@@ -5,9 +5,8 @@ email: sabelo.n@yandex.com
 
 /* Collection of General helper functions or utilities */
 
-use crate::transactions::*;
 use sha2::{Digest, Sha512};
-use std::collections::{BTreeMap, HashMap};
+use std::collections::{BTreeMap};
 
 /// Generate a hash form two UTF8 strings "message" and 'intergration key'
 pub fn hash_make<'a>(message: &'a str, intergration_key: &'static str) -> String {
@@ -23,6 +22,7 @@ pub fn hash_make<'a>(message: &'a str, intergration_key: &'static str) -> String
 // Used a BTree to get some form of ordering guarantees but need to verify if
 // order is important when generating the post
 
+#[allow(dead_code)]
 pub fn concat_values_to_str(data: BTreeMap<&str, &str>) -> String {
     // concat values
     let mut post = String::new();
@@ -32,11 +32,14 @@ pub fn concat_values_to_str(data: BTreeMap<&str, &str>) -> String {
     post
 }
 
-// pub fn concat_values_to_str<T: Iterator> (data: T) -> String {
-//     // concat values
-//     let mut post = String::new();
-//     for val in data {
-//         post.push_str(val);
-//     }
-//     post
-// }
+
+#[cfg(test)]
+mod tests {
+    #[test]
+    fn describe_test() {
+    // Prove that 1 ->  ~2 
+        assert_eq!(1 , 1);
+    }
+}
+
+

@@ -81,3 +81,15 @@ impl Response for StatusResponse {
         }
     }
 }
+
+
+
+
+#[cfg(test)]
+mod tests {
+    #[test]
+    fn describe_test() {
+    // Prove that 1 ->  ~2 
+        assert_eq!(1 , 1);
+    }
+}

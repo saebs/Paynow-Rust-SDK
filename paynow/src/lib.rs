@@ -8,7 +8,7 @@ email: sabelo.n@yandex.com
 /// Core Paynow functionality
 pub mod core;
 /// Http Responses formats or models
-pub mod responses;
+// pub mod responses;
 /// Paynow Transactions
 pub mod transactions;
 /// Paynow API endpoints, Standard constants, web form "tags" and other implementation defaults
@@ -18,15 +18,14 @@ pub mod utils;
 
 pub mod client;
 
-pub mod intf;
+pub mod trxn;
 
 #[cfg(test)]
 mod tests {
     use crate::core::{Payment, Paynow};
-    use crate::transactions::*;
-    use crate::types::*;
+//     use crate::transactions::{Transaction};
+//     use crate::types::{PaymentMethod, Paynow,};
     use crate::utils::*;
-    use crate::intf::Transact;
     use std::collections::{BTreeMap, HashMap};
     
     #[test]
@@ -114,6 +113,7 @@ mod tests {
     }
 
     #[test]
+    #[ignore]
     fn sends_request() {
         let mut album = Paynow::new();
         let payment = album.create_payment("bulk 001", "buyer@bagi.com");
