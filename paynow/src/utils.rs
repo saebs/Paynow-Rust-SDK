@@ -13,6 +13,7 @@ THE SOFTWARE IS PROVIDED "AS IS" AND THE AUTHOR DISCLAIMS ALL WARRANTIES WITH RE
 
 use sha2::{Digest, Sha512};
 use std::collections::{BTreeMap};
+use std::num::ParseFloatError;
 
 /// Generate a hash form two UTF8 strings "message" and 'intergration key'
 pub fn hash_make<'a>(message: &'a str, intergration_key: &'static str) -> String {
@@ -24,6 +25,16 @@ pub fn hash_make<'a>(message: &'a str, intergration_key: &'static str) -> String
     let hash: &[u8] = msg.as_ref();
     format!("{:X}", Sha512::digest(hash))
 }
+
+
+pub fn to_cents(amt: &str) -> Result<u64, ParseFloatError> {
+    // parse each numeric
+    let amt = amt.parse::<f64>()?;
+    Ok((amt * 100f64) as u64 )
+}
+
+
+
 ///Concats some transaction values to one string
 // Used a BTree to get some form of ordering guarantees but need to verify if
 // order is important when generating the post
@@ -41,10 +52,12 @@ pub fn concat_values_to_str(data: BTreeMap<&str, &str>) -> String {
 
 #[cfg(test)]
 mod tests {
+    use crate::utils::*;
     #[test]
-    fn describe_test() {
+    fn parse_to_cents() {
     // Prove that 1 ->  ~2 
-        assert_eq!(1 , 1);
+        assert_eq!(1000u64 , to_cents("10").unwrap());
+        assert_eq!(1000u64 , to_cents(&"10".to_string()).unwrap());
     }
 }
 

@@ -100,7 +100,7 @@ pub const PAYMENTINSTRUMENTNATIONALITY: &'static str = "paymentinstrumentnationa
 //Merchant defaults
 pub const URL_MERCHANT_LOCALHOST: &'static str = "http://localhost";
 
-#[derive(Serialize, Deserialize, PartialEq,Debug)]
+#[derive(Serialize, Deserialize,Clone, PartialEq,Debug)]
 pub enum Status {
     /// When Initiating Transaction this status is set by Merchant
     Message,
@@ -198,7 +198,7 @@ impl fmt::Display for Passenger {
 }
 
 ///  Mode of payment when using Mobile Money and or Credit/ Debit Cards
-#[derive(Debug, Serialize, Deserialize, PartialEq )]
+#[derive(Debug, Serialize, Deserialize,Clone , PartialEq )]
 pub enum PaymentMethod {
     Ecocash,
     OneMoney,

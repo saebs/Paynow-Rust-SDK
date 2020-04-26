@@ -17,22 +17,22 @@ THE SOFTWARE IS PROVIDED "AS IS" AND THE AUTHOR DISCLAIMS ALL WARRANTIES WITH RE
 use serde::{Deserialize, Serialize};
 
 // use crate::responses::*;
-// use crate::transactions::*;
+use crate::transactions::Transaction;
 // use crate::types::{PaymentMethod,Status};
 // use crate::utils;
 use std::collections::HashMap;
 use std::num::ParseFloatError;
 
-/// The main Model type for interacting with Paynow
+/// The main type for interacting with Paynow
 #[derive(Debug, PartialEq)]
 pub struct Paynow {
     //TODO make idiomatic
     // write setters and getters for these parameters and hide em
-    pub integration_id: &'static str,
-    pub integration_key: &'static str,
-    pub returnurl: &'static str,
-    pub resulturl: &'static str,
-    pub tokenize: bool,
+    integration_id: &'static str,
+    integration_key: &'static str,
+    returnurl: &'static str,
+    resulturl: &'static str,
+    tokenize: bool,
 }
 
 /*
@@ -60,27 +60,9 @@ impl Paynow {
     /// Create a Payment
     pub fn create_payment(&mut self, reference: &'static str, auth_email: &'static str) -> Payment {
         let items = HashMap::new();
-        Payment {
-            reference,
-            items,
-            auth_email,
-            additionalinfo: "",
-            amount: 0usize,
-            requests: "foo".to_owned(),
-        }
     }
 
-    /// Create Paynow instance from key - value pairs
-    // Data sources could be e.g. HashMap, text file maybe?
-    // or JSON i dont know.
-    // To KISS it we will use a hashmap
-    /// NB: Not production ready,
-    #[allow(dead_code)]
-    pub fn from<T>(data_src: T) -> Self {
-        // supposed to parse json, xml or csv
-       unimplemented!() 
-    }
-    
+   
     // TODO , iwrite send or init transaction functionality
     // Purpose: to send or init regular payment request
     // Sign: send(payment) -> InitResponse
@@ -93,40 +75,32 @@ impl Paynow {
         unimplemented!()
     }
 
-    pub fn sendmobile(&self, payment: Payment, phone: &'static str, method: &'static str) {
-    // just adds mobile payment required info if not already loaded 
-        unimplemented!()
-    }
-
     //TODO write send mobile method
     // Purpose : to send or initiate an express checkout / mobile payment
     // mo
     // SendMobile(payment,phone, method) -> InitResponse
+    pub fn mobile(&self, phone: &'static str, method: &'static str) {
+    // put constraints , auth email mandatory
+    // just adds mobile payment required info if not already loaded 
+    // then calls send or we just chain the idiotic way
+        unimplemented!()
+    }
+
 }
 
 /// Helper for composing transactions before posting to Paynow
 #[derive(Debug, PartialEq)]
 pub struct Payment {
-    pub reference: &'static str, // unique identifier for transaction
     pub items: HashMap<&'static str, usize>, // Dictionary of items in shopping cart description and amount
-    pub auth_email: &'static str,            // Users email address
-    pub additionalinfo: &'static str,
     pub amount: usize,
-    pub requests: String,
+    transaction: Transaction,
 }
 
+type Money = u64;
 //Personal notes
 // Get data from paynow, analysise and extract required fields for specific transaction
 impl Payment {
-    pub fn new() -> Self {
-        Payment {
-            reference: "",
-            items: HashMap::new(),
-            auth_email: "",
-            additionalinfo: "",
-            amount: 0usize,
-            requests: String::from("nothing"),
-        }
+    pub fn new(reference: &'static str, auth_email: &'static str, additionalinfo: &'static str, amount: &'static str) -> Self {
     }
 
     /// Payment reference setter
@@ -137,12 +111,13 @@ impl Payment {
     pub fn set_authemail(&mut self, auth_email: &'static str) {
         self.auth_email = auth_email;
     }
-    /// Add item to trolley ehe
+    
+    /// Add item to trolley 
     // Paynow recommends max of two decimal places for amounts
     pub fn add(&mut self, item: &'static str, price: &str) -> Result<(), ParseFloatError> {
-        let price = price.parse::<f64>()?;
         // we want to store total amount in cents
-        self.items.insert(item, (price * 100f64) as usize);
+        // parse to cents
+        self.items.insert(item, (price * 100f64) as u64);
         Ok(())
     }
 

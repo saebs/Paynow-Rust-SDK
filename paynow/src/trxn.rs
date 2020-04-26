@@ -7,6 +7,7 @@ THE SOFTWARE IS PROVIDED "AS IS" AND THE AUTHOR DISCLAIMS ALL WARRANTIES WITH RE
 */
 
 use std::collections::HashMap;
+use std::error::Error;
 // use std::fmt::{Debug, Display};
 // use std::hash::Hash;
 // For use later when creating generics
@@ -19,8 +20,12 @@ pub trait Transact {
     fn init(&self) -> String;
     //fn load<T>(&mut self, data: Box<T>) {}
     
-    fn load(&mut self, _map: &HashMap<String, String>) {
+    fn load(&mut self, _map: &HashMap<&str, &str>) -> Result<(), String> {
+        Ok(())
     }
+    
+    
+    
     // TODO
     // implement generic methods that accepts standard key value pair collection
     
