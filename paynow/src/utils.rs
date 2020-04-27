@@ -12,10 +12,10 @@ THE SOFTWARE IS PROVIDED "AS IS" AND THE AUTHOR DISCLAIMS ALL WARRANTIES WITH RE
 /* Collection of General helper functions or utilities */
 
 use sha2::{Digest, Sha512};
-use std::collections::{BTreeMap};
 use std::num::ParseFloatError;
 
 /// Generate a hash form two UTF8 strings "message" and 'intergration key'
+#[allow(dead_code)]
 pub fn hash_make<'a>(message: &'a str, intergration_key: &'static str) -> String {
     // concat to key to end of message
     let mut msg = String::new();
@@ -27,27 +27,13 @@ pub fn hash_make<'a>(message: &'a str, intergration_key: &'static str) -> String
 }
 
 
-pub fn to_cents(amt: &str) -> Result<u64, ParseFloatError> {
+pub fn to_cents(amt: &str) -> Result<usize, ParseFloatError> {
     // parse each numeric
     let amt = amt.parse::<f64>()?;
-    Ok((amt * 100f64) as u64 )
+    Ok((amt * 100f64) as usize)
 }
 
 
-
-///Concats some transaction values to one string
-// Used a BTree to get some form of ordering guarantees but need to verify if
-// order is important when generating the post
-
-#[allow(dead_code)]
-pub fn concat_values_to_str(data: BTreeMap<&str, &str>) -> String {
-    // concat values
-    let mut post = String::new();
-    for val in data.values() {
-        post.push_str(val);
-    }
-    post
-}
 
 
 #[cfg(test)]
@@ -56,8 +42,8 @@ mod tests {
     #[test]
     fn parse_to_cents() {
     // Prove that 1 ->  ~2 
-        assert_eq!(1000u64 , to_cents("10").unwrap());
-        assert_eq!(1000u64 , to_cents(&"10".to_string()).unwrap());
+        assert_eq!(1000usize , to_cents("10").unwrap());
+        assert_eq!(1000usize , to_cents(&"10".to_string()).unwrap());
     }
 }
 

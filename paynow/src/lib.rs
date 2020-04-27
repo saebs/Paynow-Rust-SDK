@@ -18,6 +18,7 @@ pub mod transactions;
 pub mod types;
 mod utils;
 mod trxn;
+pub mod paynow;
 
 #[cfg(test)]
 mod bona {

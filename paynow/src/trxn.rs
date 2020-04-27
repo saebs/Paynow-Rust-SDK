@@ -7,10 +7,7 @@ THE SOFTWARE IS PROVIDED "AS IS" AND THE AUTHOR DISCLAIMS ALL WARRANTIES WITH RE
 */
 
 use std::collections::HashMap;
-use std::error::Error;
 // use std::fmt::{Debug, Display};
-// use std::hash::Hash;
-// For use later when creating generics
 //use std::iter::Iterator;
 
 pub trait Transact {
