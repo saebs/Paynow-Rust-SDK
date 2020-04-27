@@ -11,94 +11,17 @@ THE SOFTWARE IS PROVIDED "AS IS" AND THE AUTHOR DISCLAIMS ALL WARRANTIES WITH RE
 */
 use serde::{Deserialize, Serialize};
 use std::fmt;
-
 // Paynow API Endpoints
-pub const URL_INITIATE_TRANSACTION: &'static str =
+pub const _URL_INITIATE_TRANSACTION: &'static str =
     "https://www.paynow.co.zw/interface/initiatetransaction";
-pub const URL_INITIATE_EXPRESS_CHECKOUT_TRANSACTION: &'static str =
+pub const _URL_INITIATE_EXPRESS_CHECKOUT_TRANSACTION: &'static str =
     "https://www.paynow.co.zw/interface/remotetransaction";
-pub const URL_INITIATE_PASSENGER_TICKET_TRANSACTION: &'static str =
+pub const _URL_INITIATE_PASSENGER_TICKET_TRANSACTION: &'static str =
     "https://www.paynow.co.zw/interface/initiatetickettransaction";
-
-// Paynow fields or Attributes Directory
-pub const RESULTURL: &'static str = "resulturl";
-pub const RETURNURL: &'static str = "returnurl";
-pub const REFERENCE: &'static str = "reference";
-pub const AMOUNT: &'static str = "amount";
-pub const ID: &'static str = "id";
-pub const ADDITIONAL_INFO: &'static str = "additionalinfo";
-pub const AUTHEMAIL: &'static str = "authemail";
-pub const STATUS: &'static str = "status";
-pub const ERROR: &'static str = "error";
-pub const TOKENIZE: &'static str = "tokenize";
-pub const MERCHANTTRACE: &'static str = "merchanttrace";
-pub const HASH: &'static str = "hash";
-pub const BROWSERURL: &'static str = "browserurl";
-pub const POLLURL: &'static str = "pollurl";
-pub const METHOD: &'static str = "method";
-pub const PARES: &'static str = "pares";
-pub const MD: &'static str = "md";
-pub const PAYNOW_REFERENCE: &'static str = "paynowreference";
-pub const TOKEN: &'static str = "token";
-pub const TOKEN_EXPIRY: &'static str = "tokenexpiry";
-pub const PHONE: &'static str = "phone";
-
-// Credit/ Debit Card info
-pub const CARDNUMBER: &'static str = "cardnumber";
-    // Name printed on front of card
-pub const CARDNAME: &'static str = "cardname";
-    // Numeric	3 or 4 digits from rear of card
-pub const CARDCVV: &'static str = "cardcvv";
-    // Numeric	6 digit card expiry date (MMYYYY) e.g. 052018
-pub const CARDEXPIRY: &'static str = "cardexpiry";
-    // String	Customer’s billing address
-pub const BILLINGLINE1: &'static str = "billingline1";
-    // String	Not required but will assist with fraud detection
-pub const BILLINGLINE2: &'static str = "billingline2";
-    // String	Customer’s billing address city
-pub const BILLINGCITY: &'static str = "billingcity";
-    // String	Not required but will assist with fraud detection
-pub const BILLINGPROVINCE: &'static str = "billingprovince";
-    // String	Customer’s billing address country
-pub const BILLINGCOUNTRY: &'static str = "billingcountry";
-
-// passenger ticket extra fields
-pub const PRIMARY_TICKET_NUMBER: &'static str = "primaryticketnumber";
-pub const PASSENGER_FIRSTNAME: &'static str = "passengerfirstname";
-pub const PASSENGER_LASTNAME: &'static str = "passengerlastname";
-pub const PASSENGER_ID: &'static str = "passengerid";
-pub const PASSENGER_STATUS: &'static str = "passengerstatus";
-pub const PASSENGER_TYPE: &'static str = "passengertype";
-pub const FIRST_ARRIVAL_LOCATION_CODE: &'static str = "firstarrivallocationcode";
-pub const PNR_NUMBER: &'static str = "pnrnumber";
-pub const OFFICE_IATA_NUMBER: &'static str = "officeiatanumber";
-pub const ORDER_NUMBER: &'static str = "ordernumber";
-pub const PLACE_OF_ISSUE: &'static str = "placeofissue";
-pub const DEPARTURE_DATE: &'static str = "departuredate";
-pub const DEPARTURE_TIME: &'static str = "departuretime";
-pub const ARRIVAL_TIME: &'static str = "arrivaltime";
-pub const JOURNEY_TYPE: &'static str = "journeytype";
-pub const COMPLETE_ROUTE: &'static str = "completeroute";
-
-//	String	(optional) Only returned for successful payments: Masked card number, mobile wallet MSISDN etc.
-pub const PAYMENTINSTRUMENT: &'static str = "paymentinstrument";
-//  String	(optional) Only returned for successful payments: Name of the channel used e.g. Visa, Mastercard, Ecocash
-pub const PAYMENTCHANNEL: &'static str = "paymentchannel";
-// String	(optional) Only returned for successful payments:Cardholder Name";
-pub const PAYMENTINSTRUMENTNAME: &'static str = "paymentinstrumentname";
-//String	(optional) Only returned for successful payments:Approval transaction code
-pub const PAYMENTCHANNELREFERENCE: &'static str = "paymentchannelreference";
-//String	(optional) Only returned for successful payments:Electronic Commerce Indicator
-pub const PAYMENTCHANNELECI: &'static str = "paymentchanneleci";
-//String	(optional) Payment Fraud Score
-pub const PAYMENTFRAUDSCORE: &'static str = "paymentfraudscore";
-//String	(optional) Issue, Request Manual Review, Reject
-pub const PAYMENTFRAUDDECISION: &'static str = "paymentfrauddecision";
-//String	(optional) Only returned for successful payments: Domestic or Foreign
-pub const PAYMENTINSTRUMENTNATIONALITY: &'static str = "paymentinstrumentnationality";
-
 //Merchant defaults
-pub const URL_MERCHANT_LOCALHOST: &'static str = "http://localhost";
+pub const _URL_MERCHANT_LOCALHOST: &'static str = "http://localhost";
+
+
 
 #[derive(Serialize, Deserialize,Clone, PartialEq,Debug)]
 pub enum Status {
