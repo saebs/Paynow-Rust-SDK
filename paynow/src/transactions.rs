@@ -72,8 +72,8 @@ impl Transaction {
         self.phone = phone.to_string();
     }
     pub fn set_method(&mut self, method: &str) {
-    
-        let pmt: PaymentMethod = match  method {
+
+        let pmt: PaymentMethod = match  &method.to_lowercase()[..] {
             "econet" => PaymentMethod::Ecocash,
             "onemoney" => PaymentMethod::OneMoney,
             "telecash" => PaymentMethod::Telecash,
