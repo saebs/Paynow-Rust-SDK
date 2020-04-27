@@ -36,7 +36,7 @@ status	String	After payment is complete Paynow will notify the merchant site wit
 hash
 
 */
-
+#[derive(Serialize, Deserialize, Debug)]
 pub struct InitResponse {
     status: Status,
     error: String,
@@ -66,6 +66,7 @@ pollurl	String	The URL on Paynow the merchant site can poll to confirm the trans
 status	String	After payment is complete Paynow will notify the merchant site with one of the Status values.
 hash
 */
+#[derive(Serialize, Deserialize, Debug)]
 pub struct TransactionStatus {
     reference: String,
     amount: String,

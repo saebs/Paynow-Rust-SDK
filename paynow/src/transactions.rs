@@ -8,13 +8,13 @@ THE SOFTWARE IS PROVIDED "AS IS" AND THE AUTHOR DISCLAIMS ALL WARRANTIES WITH RE
 use crate::trxn::Transact;
 use std::iter::Iterator;
 use crate::types::{PaymentMethod, Status};
-use serde::Deserialize;
+use serde::{Deserialize, Serialize };
 //use serde::Serialize;
 //use serde::ser::{Serialize, Serializer, SerializeStruct};
 use std::collections::HashMap;
 use std::fmt::{Debug};
 
-#[derive(Default, Debug, PartialEq, Clone)]
+#[derive(Default, Debug, PartialEq, Clone, Serialize, Deserialize)]
 pub struct Transaction {
 // Paynow Transactions Initialise Transaction, Initialise Express Checkout,
 // Initialise Passenger ticket(in near future) are representable by this struct
@@ -305,7 +305,7 @@ TermUrl	This is the URL on the integrator’s server where the result of the cha
 
 */
 /// Pending 3ds post
-#[derive(Deserialize)]
+#[derive(Serialize, Deserialize)]
 #[allow(dead_code)]
 pub struct Init3ds {
     id: String,
