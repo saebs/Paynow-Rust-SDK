@@ -30,6 +30,8 @@ pub fn hash_gen(message: &str, integration_key: &str) -> Result<String, &'static
 
 // helper for parsing Response string 
 fn scrap_hashable_values_only(input: &str) -> String {
+    // get all values after '=' 
+    // exclude last value or hash value
     input.chars().collect::<String>()
 
 }
