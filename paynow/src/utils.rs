@@ -1,15 +1,15 @@
+//! Helper functions or utilities for library
+
 /********************************
 Author: Sabelo Ntabeni
 email: sabelo.n@yandex.com
 *******************************/
 
-/* Collection of General helper functions or utilities */
-
 use sha2::{Digest, Sha512};
 use std::num::ParseFloatError;
 
-/// Generate a hash form two UTF8 strings "message" and 'integration key'
-#[allow(dead_code)]
+/// Generate a hash for the initRequest
+/// intergration key has to be issued by paynow beforehand
 pub fn hash_gen(message: &str, integration_key: &str) -> Result<String, &'static str> {
     // concat to key to end of message
     let mut msg = String::new();
