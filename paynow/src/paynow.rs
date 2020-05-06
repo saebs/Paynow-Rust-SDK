@@ -25,6 +25,9 @@ use crate::utils;
 use std::collections::HashMap;
 use std::num::ParseFloatError;
 
+
+type InitRequest = String;
+
 /// The Paynow type that models the official API spec / Abstract Type
 #[derive(Default, Debug, PartialEq)]
 pub struct Paynow {
@@ -92,7 +95,7 @@ impl Paynow {
 
    
     /// Purpose: to send or initialise a payment request to Paynow API
-    pub fn send(&self, _payment: Payment) -> impl Serialize + Deserialize {
+    pub fn send(&self, _payment: Payment) -> InitRequest {
         //initiate new clients and send req
         // set Transaction type requied to txn
         unimplemented!()
