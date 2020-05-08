@@ -9,6 +9,9 @@ edition = "2018"
 [dependencies]
 serde = { version = "1.0.103", features = ["derive"] }
 serde_urlencoded = "0.6.1"
-sha2 = "0.8.0"
+rust-crypto = "^0.2"
+hex-literal = "0.2.1"
 hyper = "0.13.1"
 reqwest = "0.10.1"
+urlencoding = "1.0.0"
+url = "2.1.1"
