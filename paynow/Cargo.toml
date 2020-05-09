@@ -1,7 +1,7 @@
 [package]
 name = "paynow"
 version = "0.1.0"
-authors = ["sabelo"]
+authors = ["sabelo.n@yandex.com", "Saziwe P.B.C"]
 edition = "2018"
 
 # See more keys and their definitions at https://doc.rust-lang.org/cargo/reference/manifest.html
@@ -9,9 +9,8 @@ edition = "2018"
 [dependencies]
 serde = { version = "1.0.103", features = ["derive"] }
 serde_urlencoded = "0.6.1"
-rust-crypto = "^0.2"
-hex-literal = "0.2.1"
 hyper = "0.13.1"
 reqwest = "0.10.1"
 urlencoding = "1.0.0"
 url = "2.1.1"
+sha2 = "0.8.1"
