@@ -43,7 +43,7 @@ fn parse_response(input: &str) -> (String, String) {
 }
 
 /// Checks if Response hash value is valid as a security measure
-/// Assumption: The message has been url decoded
+/// Precondition: The message is urlencoded 
 pub fn is_valid_hash(
     urlencoded_response: &str,
     integration_key: &str,
