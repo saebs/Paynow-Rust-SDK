@@ -14,11 +14,11 @@ OUT OF OR IN CONNECTION WITH THE USE OR PERFORMANCE OF THIS SOFTWARE.
 */
 
 
+// FOR FUTURE FEATURES
 // use hyper::Request;
 // use reqwest::Client;
-use serde::{Deserialize, Serialize};
+// use serde::{Deserialize, Serialize};
 
-// use crate::responses::*;
 use crate::transactions::Transaction;
 // use crate::types::{PaymentMethod,Status};
 use crate::utils;
@@ -42,8 +42,6 @@ pub struct Paynow {
 StatusResponse	PollTransaction(String url)
 StatusResponse	ProcessStatusUpdate(String response)
 StatusResponse	ProcessStatusUpdate(Dictionary<String, String> response)
-InitResponse	Send(Payment payment)
-InitResponse	SendMobile(Payment payment, String phone, MobileMoneyMethod method = Ecocash)
 */
 impl Paynow {
     /// Creates an new instance for the Paynow Type
@@ -55,7 +53,7 @@ impl Paynow {
         }
     }
 
-    /// Creates a Paynow instance from a collection of key - value pairse
+    /// Creates a Paynow instance from a collection of key - value pairs
     /// This could be from any preformatted data source
     pub fn from(_form: HashMap<&str, &str>) {
         // what now
@@ -111,7 +109,7 @@ impl Paynow {
 }
 
 /// Payments Handler Type
-// handles a shopping trolley (go argue with your ancestors engish-wise we're British!),
+// handles a shopping trolley (we speak British English around here!),
 // Including other transactional requirements
 #[derive(Default, Debug, PartialEq)]
 pub struct Payment {
