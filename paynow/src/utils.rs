@@ -5,23 +5,22 @@ Author: Sabelo Ntabeni
 email: sabelo.n@yandex.com
 *******************************/
 
-use crypto::sha2::Sha512;
-use crypto::digest::Digest;
+use sha2::{Sha512, Digest};
 use std::num::ParseFloatError;
 
 use urlencoding::decode;
 
 /// Generate a hash for the initRequest
 /// integration key has to be issued by paynow
-pub fn hash_gen(message: &str, integration_key: &str) -> Result<String, &'static str> {
+pub fn hash_gen(values: &str, integration_key: &str) -> Result<String, &'static str> {
     // create sha512 hash of result and convert to uppercase hexadecimal
-    let message = decode(message).unwrap();
-    let mut combo = String::from(message);
-    combo.push_str(integration_key);
+    let mut hashable = String::from(decode(values).unwrap());
+    hashable.push_str(integration_key);
+
     let mut hash = Sha512::new();
-    hash.input_str(combo.as_str());
-    let out = hash.result_str();
-    Ok(out.to_uppercase())
+    hash.input(hashable.as_bytes());
+    let result = hash.result();
+    Ok(format!("{:X}", result))
 }
 
 /// helper for parsing initResponse string in key-value format 
@@ -72,18 +71,15 @@ fn parse_response_values(input: &str) -> (String, String) {
 /// Checks if Response hash value is valid as a security measure
 /// Assumption: The message has been url decoded
 pub fn is_valid_hash(
-    response_message: &str,
+    response_values: &str,
     integration_key: &str,
 ) -> Result<String, &'static str> {
     // need to sanitize response string
-
-    let (message, hash0) = parse_response_values(response_message);
-    // assert_eq!(one, two);
-    let mut message = message;
-    message.push_str(integration_key);
-    let hash1 = hash_gen(&message, integration_key).unwrap();
-    assert_eq!(hash1, hash0);
-    Ok(hash1)
+    // let mut message = message;
+    // message.push_str(integration_key);
+    // let hash1 = hash_gen(&message, integration_key).unwrap();
+    // assert_eq!(hash1, hash0);
+    Ok(String::new())
 }
 
 /// Parse string input to cents
