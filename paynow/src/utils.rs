@@ -5,10 +5,10 @@ Author: Sabelo Ntabeni
 email: sabelo.n@yandex.com
 *******************************/
 
-use sha2::{Sha512, Digest};
+use sha2::{Digest, Sha512};
 use std::num::ParseFloatError;
-use urlencoding::decode;
 use url::form_urlencoded::parse;
+use urlencoding::decode;
 
 /// Generate a hash for the initRequest
 /// integration key has to be issued by paynow
@@ -23,8 +23,8 @@ pub fn hash_gen(values: &str, integration_key: &str) -> Result<String, &'static 
     Ok(format!("{:X}", result))
 }
 
-/// helper for parsing initResponse string in key-value format 
-/// collates all values exept hash value which is seperated 
+/// helper for parsing initResponse string in key-value format
+/// collates all values exept hash value which is seperated
 /// output: (non-hash values, hash)
 fn parse_response(input: &str) -> (String, String) {
     let input = parse(input.as_bytes());
@@ -43,7 +43,7 @@ fn parse_response(input: &str) -> (String, String) {
 }
 
 /// Checks if Response hash value is valid as a security measure
-/// Precondition: The message is urlencoded 
+/// Precondition: The message is urlencoded
 pub fn is_valid_hash(
     urlencoded_response: &str,
     integration_key: &str,
@@ -85,7 +85,6 @@ mod tests {
         assert_eq!(hash_gen(response, integration_key).unwrap(), hash1);
     }
 
-
     #[test]
     fn parses_response() {
         // let response = "status=Ok&browserurl=https%3a%2f%2fstaging.paynow.co.zw%2fPayment%2fConfirmPayment%2f9510&pollurl=https%3a%2f%2fstaging.paynow.co.zw%2fInterface%2fCheckPayment%2f%3fguid%3dc7ed41da-0159-46da-b428-69549f770413&paynowreference=9510&hash=750DD0B0DF374678707BB5AF915AF81C228B9058AD57BB7120569EC68BBB9C2EFC1B26C6375D2BC562AC909B3CD6B2AF1D42E1A5E479FFAC8F4FB3FDCE71DF4D";
@@ -93,7 +92,10 @@ mod tests {
         let message = "Okhttps://staging.paynow.co.zw/Payment/ConfirmPayment/9510https://staging.paynow.co.zw/Interface/CheckPayment/?guid=c7ed41da-0159-46da-b428-69549f7704139510";
         let hash = "750DD0B0DF374678707BB5AF915AF81C228B9058AD57BB7120569EC68BBB9C2EFC1B26C6375D2BC562AC909B3CD6B2AF1D42E1A5E479FFAC8F4FB3FDCE71DF4D";
         // assert_eq!((message0.to_string(), hash0.to_string()), parse_response_values(message0));
-        assert_eq!((message.to_string(), hash.to_string()), parse_response(response));
+        assert_eq!(
+            (message.to_string(), hash.to_string()),
+            parse_response(response)
+        );
     }
     #[test]
     fn validates_hash() {
@@ -101,9 +103,6 @@ mod tests {
         // hash = "750DD0B0DF374678707BB5AF915AF81C228B9058AD57BB7120569EC68BBB9C2EFC1B26C6375D2BC562AC909B3CD6B2AF1D42E1A5E479FFAC8F4FB3FDCE71DF4D";
         let response = "status=Ok&browserurl=https%3a%2f%2fstaging.paynow.co.zw%2fPayment%2fConfirmPayment%2f9510&pollurl=https%3a%2f%2fstaging.paynow.co.zw%2fInterface%2fCheckPayment%2f%3fguid%3dc7ed41da-0159-46da-b428-69549f770413&paynowreference=9510&hash=750DD0B0DF374678707BB5AF915AF81C228B9058AD57BB7120569EC68BBB9C2EFC1B26C6375D2BC562AC909B3CD6B2AF1D42E1A5E479FFAC8F4FB3FDCE71DF4D";
 
-        assert_eq!(
-            is_valid_hash(&response, integration_key).unwrap(),
-           true 
-        );
+        assert_eq!(is_valid_hash(&response, integration_key).unwrap(), true);
     }
 }

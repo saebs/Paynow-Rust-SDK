@@ -14,9 +14,7 @@ pub const _URL_INITIATE_PASSENGER_TICKET_TRANSACTION: &'static str =
 //Merchant defaults
 pub const _URL_MERCHANT_LOCALHOST: &'static str = "http://localhost";
 
-
-
-#[derive(Serialize, Deserialize,Clone, PartialEq,Debug)]
+#[derive(Serialize, Deserialize, Clone, PartialEq, Debug)]
 pub enum Status {
     /// When Initiating Transaction this status is set by Merchant
     Message,
@@ -62,7 +60,6 @@ pub enum Status {
 }
 
 impl Default for Status {
-
     fn default() -> Self {
         Status::Message
     }
@@ -121,7 +118,7 @@ impl fmt::Display for Passenger {
 }
 
 ///  Mode of payment when using Mobile Money and or Credit/ Debit Cards
-#[derive(Debug, Serialize, Deserialize,Clone , PartialEq )]
+#[derive(Debug, Serialize, Deserialize, Clone, PartialEq)]
 pub enum PaymentMethod {
     Ecocash,
     OneMoney,
@@ -150,7 +147,7 @@ impl fmt::Display for PaymentMethod {
             //Paynow doesnt make the distinction but we do...
             PaymentMethod::Visa => write!(method, "vmc"),
             PaymentMethod::MasterCard => write!(method, "vmc"),
-            PaymentMethod::Other => write!(method, "")
+            PaymentMethod::Other => write!(method, ""),
         }
     }
 }
@@ -178,19 +175,17 @@ pub struct Card {
     billingcountry: String,
 }
 
-
-
 #[cfg(test)]
 mod tests {
     #[test]
     fn describe_test() {
-    // Prove that 1 ->  ~2 
-        assert_eq!(1 , 1);
+        // Prove that 1 ->  ~2
+        assert_eq!(1, 1);
     }
 
- /* example successfull Status Response
- Status=Ok&BrowserUrl=http%3a%2f%2fwww.paynow.co.zw%3a7106%2fPayment%2fConfirmPayment%2f1169&PollUrl=http%3a%2f%2fwww.paynow.co.zw%3a7106%2fInterface%2fCheckPayment%2f%3fg uid%3d3cb27f4b-b3ef-4d1f-9178-5e5e62a43995&Hash=8614C21DD93749339906DB35C51B06006B33DC8C192F40DFE2DB6549942C837C4452E1D1333DE9DB7814B278C8B9E3C34D1A76D2F937DEE57502336E0A071412
- */
+    /* example successfull Status Response
+    Status=Ok&BrowserUrl=http%3a%2f%2fwww.paynow.co.zw%3a7106%2fPayment%2fConfirmPayment%2f1169&PollUrl=http%3a%2f%2fwww.paynow.co.zw%3a7106%2fInterface%2fCheckPayment%2f%3fg uid%3d3cb27f4b-b3ef-4d1f-9178-5e5e62a43995&Hash=8614C21DD93749339906DB35C51B06006B33DC8C192F40DFE2DB6549942C837C4452E1D1333DE9DB7814B278C8B9E3C34D1A76D2F937DEE57502336E0A071412
+    */
     // Example of failed iniRequest, Deserialize to InitError
     // Status=Error&Error=Invalid+amount+field
 }

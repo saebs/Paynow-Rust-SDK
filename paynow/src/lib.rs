@@ -1,4 +1,3 @@
-
 //! Rust SDK for Paynow Zimbabwe  
 
 /********************************
@@ -21,6 +20,6 @@ OUT OF OR IN CONNECTION WITH THE USE OR PERFORMANCE OF THIS SOFTWARE.
 
 pub mod paynow;
 pub mod transactions;
+mod trxn;
 mod types;
 mod utils;
-mod trxn;

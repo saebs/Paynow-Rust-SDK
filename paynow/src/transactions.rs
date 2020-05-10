@@ -1,17 +1,17 @@
 use crate::trxn::Transact;
-use std::iter::Iterator;
 use crate::types::{PaymentMethod, Status};
-use serde::{Deserialize, Serialize };
+use serde::{Deserialize, Serialize};
+use std::iter::Iterator;
 //use serde::Serialize;
 //use serde::ser::{Serialize, Serializer, SerializeStruct};
 use std::collections::HashMap;
-use std::fmt::{Debug};
+use std::fmt::Debug;
 
 #[derive(Default, Debug, PartialEq, Clone, Serialize, Deserialize)]
 pub struct Transaction {
-// Paynow Transactions Initialise Transaction, Initialise Express Checkout,
-// Initialise Passenger ticket(in near future) are representable by this struct
-// 
+    // Paynow Transactions Initialise Transaction, Initialise Express Checkout,
+    // Initialise Passenger ticket(in near future) are representable by this struct
+    //
     id: String,
     reference: String,
     // Need to decide on type to handle currency
@@ -42,21 +42,20 @@ pub struct Transaction {
     index: usize,
 }
 
-
-
 impl Transaction {
-
     // creator
 
     pub fn new() -> Self {
-        Transaction{..Default::default()}
+        Transaction {
+            ..Default::default()
+        }
     }
-// Setters
+    // Setters
 
     pub fn set_reference(&mut self, reference: &str) {
         self.reference = reference.to_string();
     }
-    
+
     pub fn set_authemail(&mut self, authemail: &str) {
         self.authemail = authemail.to_string();
     }
@@ -65,55 +64,46 @@ impl Transaction {
         self.phone = phone.to_string();
     }
     pub fn set_method(&mut self, method: &str) {
-
-        let pmt: PaymentMethod = match  &method.to_lowercase()[..] {
+        let pmt: PaymentMethod = match &method.to_lowercase()[..] {
             "econet" => PaymentMethod::Ecocash,
             "onemoney" => PaymentMethod::OneMoney,
             "telecash" => PaymentMethod::Telecash,
             "visa" => PaymentMethod::Visa,
             "mastercard" => PaymentMethod::MasterCard,
-            _          => PaymentMethod::Other,
+            _ => PaymentMethod::Other,
         };
         self.method = pmt;
     }
 
+    // Getters
 
-// Getters 
-
-#[allow(dead_code)]
+    #[allow(dead_code)]
     fn get_id(&self) -> String {
         format!("{}", self.id)
     }
-    
-#[allow(dead_code)]
+
+    #[allow(dead_code)]
     fn get_reference(&self) -> String {
         format!("{}", self.reference)
     }
-#[allow(dead_code)]
+    #[allow(dead_code)]
     fn get_amount(&self) -> u64 {
         self.amount
     }
-    
-#[allow(dead_code)]
+
+    #[allow(dead_code)]
     fn get_additionalinfo(&self) -> String {
         format!("{}", self.additionalinfo)
     }
-
-
-
-
-
 }
-// 
 
 impl Iterator for Transaction {
-   type Item = String;
-   
-   fn next(&mut self) -> Option<Self::Item> {
+    type Item = String;
+
+    fn next(&mut self) -> Option<Self::Item> {
         let item = match self.index {
-        
-            0 => Some(format!("{}",self.id)),
-            1 => Some(format!("{}",self.reference)),
+            0 => Some(format!("{}", self.id)),
+            1 => Some(format!("{}", self.reference)),
             2 => Some(format!("{}", self.amount)),
             3 => Some(format!("{}", self.additionalinfo)),
             4 => Some(format!("{}", self.returnurl)),
@@ -127,7 +117,7 @@ impl Iterator for Transaction {
             12 => Some(format!("{}", self.cardnumber)),
             13 => Some(format!("{}", self.cardname)),
             14 => Some(format!("{}", self.cardcvv)),
-            15 => Some(format!("{}", self.cardexpiry)), 
+            15 => Some(format!("{}", self.cardexpiry)),
             16 => Some(format!("{}", self.billingline1)),
             17 => Some(format!("{}", self.billingline2)),
             18 => Some(format!("{}", self.billingcity)),
@@ -138,13 +128,11 @@ impl Iterator for Transaction {
             _ => None,
         };
         self.index += 1;
-        item 
-   }
-
+        item
+    }
 }
 
 impl Transact for Transaction {
-    // new
     // Consider minimum requirement of invariant Transaction id for each new instance
     fn new() -> Self {
         Transaction {
@@ -152,12 +140,11 @@ impl Transact for Transaction {
         }
     }
 
-
     /// Formats a transaction to specific urlencoded string for each transaction type
-    /// This string is the body of the HTTPS request 
+    /// This string is the body of the HTTPS request
     /// Init
     fn init(&self) -> String {
-        // Decided to hard encode each transaction type in order 
+        // Decided to hard encode each transaction type in order
         // to get deterministic behaviour when hashing each transaction type
         let initialisetxn: String = format!("id={}&reference={}&amount={}&additionalinfo={}&returnurl={}&resulturl={}&authemail={}&tokenize={}&merchanttrace={}&status={}&hash={}",
             self.id,
@@ -177,7 +164,7 @@ impl Transact for Transaction {
             self.id,
             self.reference ,
             self.amount ,
-            self.additionalinfo, 
+            self.additionalinfo,
             self.returnurl ,
             self.resulturl ,
             self.authemail ,
@@ -191,8 +178,8 @@ impl Transact for Transaction {
         let initialisevmc: String = format!("id={}&reference={}&amount={}&additionalinfo={}&returnurl={}&resulturl={}&authemail={}&tokenize={}&merchanttrace={}&status={}&method={}&phone={}&cardnumber={}&cardname={}&cardcvv={}&cardexpiry={}&billingline1={}&billingline2={}&billingcity={}&billingprovince={}&billingcountry={}&token={}&hash={}",
             self.id,
             self.reference ,
-            self.amount ,
-            self.additionalinfo, 
+            self.amount,
+            self.additionalinfo,
             self.returnurl ,
             self.resulturl ,
             self.authemail ,
@@ -214,38 +201,37 @@ impl Transact for Transaction {
             self.hash);
 
         match self.method {
-            PaymentMethod::Ecocash | PaymentMethod::OneMoney | PaymentMethod::Telecash => 
-                initialisemobile.replace(" ", "+") , // urlencoding spaces
-            PaymentMethod::MasterCard | PaymentMethod::Visa => initialisevmc.replace(" ", "+") ,
-            PaymentMethod::Other => initialisetxn.replace(" ", "+") ,
+            PaymentMethod::Ecocash | PaymentMethod::OneMoney | PaymentMethod::Telecash => {
+                initialisemobile.replace(" ", "+")
+            } // urlencoding spaces
+            PaymentMethod::MasterCard | PaymentMethod::Visa => initialisevmc.replace(" ", "+"),
+            PaymentMethod::Other => initialisetxn.replace(" ", "+"),
         }
     }
 
     fn load(&mut self, data: &HashMap<&str, &str>) -> Result<(), String> {
-    
         if data.is_empty() {
-            return Err("no data in hashmap".to_string()) 
+            return Err("no data in hashmap".to_string());
         };
-        
-        
-//     Allocating a new String to create a lookup key!
-//     "The easy way or the hard way"? -  
+
+        //     Allocating a new String to create a lookup key!
+        //     "The easy way or the hard way"? -
         self.id = data.get(&"id").unwrap().to_string();
-        self.reference = data.get(&"reference").unwrap().to_string(); 
+        self.reference = data.get(&"reference").unwrap().to_string();
         self.amount = data.get(&"amount").unwrap().parse::<u64>().unwrap();
         self.additionalinfo = data.get(&"additionalinfo").unwrap().to_string();
         self.returnurl = data.get(&"returnurl").unwrap().to_string();
         self.resulturl = data.get(&"resulturl").unwrap().to_string();
         self.authemail = data.get(&"authemail").unwrap().to_string();
-        // not sure if we should search for token explicity set it from some configuration file 
+        // not sure if we should search for token explicity set it from some configuration file
         // ???? Its somewhat of an invariant depending on the merchant if registred or not so
         //...   will ignore tokenize parameter until a reason to include it here comes up
         // self.tokenize = data.get(&"tokenize").unwrap().to_string().parse::<bool>().unwrap();
 
         self.merchanttrace = data.get(&"merchanttrace").unwrap().to_string();
         /***********************************************************************************/
-        // since this function is for specifically loading merchant transaction data / user input 
-        // we will not search for the status at this stage 
+        // since this function is for specifically loading merchant transaction data / user input
+        // we will not search for the status at this stage
         // let status: String = data.get(&"Status").unwrap().to_string();
         // let status: Status = match &status[..] {
         //                 // the input has to be sanitized, tolower case but for now we put two variations
@@ -256,20 +242,20 @@ impl Transact for Transaction {
         //                 };
         // self.status = status;
         /*************************************************************************************/
-        let method: String = data.get(&"method").unwrap().to_string(); 
+        let method: String = data.get(&"method").unwrap().to_string();
         let method: PaymentMethod = match &method[..] {
-                            "Ecocash" | "ecocash" => PaymentMethod::Ecocash,
-                            "Onemoney" | "onemoney" => PaymentMethod::OneMoney,
-                            "Telecash" | "telecash" => PaymentMethod::Telecash,
-                            //NB Paynow does not make a distinction between Visa or MasterCard
-                            // The API only recognises "vmc" for both types of cards 
-                            // This implementation abstract that from the user
-                            // The PaymentMethod enum will display or format appropiate API values as required
-                            "Visa" | "visa" => PaymentMethod::Visa,
-                            "MasterCard" | "mastercard"  => PaymentMethod::MasterCard,
-                            //                                                                   _         _
-                            // Why Paynow left out Zimswitch to which they do support it beats me \_(- -)_/
-                            _  => PaymentMethod::Other,
+            "Ecocash" | "ecocash" => PaymentMethod::Ecocash,
+            "Onemoney" | "onemoney" => PaymentMethod::OneMoney,
+            "Telecash" | "telecash" => PaymentMethod::Telecash,
+            //NB Paynow does not make a distinction between Visa or MasterCard
+            // The API only recognises "vmc" for both types of cards
+            // This implementation abstract that from the user
+            // The PaymentMethod enum will display or format appropiate API values as required
+            "Visa" | "visa" => PaymentMethod::Visa,
+            "MasterCard" | "mastercard" => PaymentMethod::MasterCard,
+            //                                                                   _         _
+            // Why Paynow left out Zimswitch to which they do support it beats me \_(- -)_/
+            _ => PaymentMethod::Other,
         };
         self.method = method;
         self.phone = data.get(&"phone").unwrap().to_string();
@@ -283,11 +269,10 @@ impl Transact for Transaction {
         self.billingprovince = data.get(&"billingprovince").unwrap().to_string();
         self.billingcountry = data.get(&"billingcountry").unwrap().to_string();
         self.token = data.get(&"token").unwrap().to_string();
-        // snippet below for later additions e.g. passenger ticket transactions 
+        // snippet below for later additions e.g. passenger ticket transactions
         // self. = data.get(&format!("_{}","")).unwrap().to_string();
         Ok(())
     } // load end
-
 } // transaction end
 
 /*
@@ -310,54 +295,47 @@ pub struct Init3ds {
     hash: String,
 }
 
-
 #[cfg(test)]
 mod tests {
-use crate::types::*;
-use crate::transactions::*;
-use std::collections::HashMap;
+    use crate::transactions::*;
+    use crate::types::*;
+    use std::collections::HashMap;
 
     #[test]
-    #[ignore]
-    fn it_works() {
-        assert_eq!(2 + 2, 4);
+    fn new_transaction1() {
+        let trans0 = Transaction {
+            id: String::new(),
+            reference: String::new(),
+            amount: 0,
+            additionalinfo: String::new(),
+            returnurl: String::new(),
+            resulturl: String::new(),
+            authemail: String::new(),
+            tokenize: false,
+            merchanttrace: String::new(),
+            status: Status::Message,
+            // Extra requrements for Express or Mobile
+            method: PaymentMethod::Other,
+            phone: String::new(),
+            cardnumber: String::new(), //numeric
+            cardname: String::new(),
+            cardcvv: String::new(),
+            cardexpiry: String::new(),
+            billingline1: String::new(),
+            billingline2: String::new(),
+            billingcity: String::new(),
+            billingprovince: String::new(),
+            billingcountry: String::new(),
+            token: String::new(),
+            hash: String::new(),
+            index: 0usize,
+        };
+
+        assert_eq!(trans0, Transaction::new());
     }
-    
-#[test]
-fn new_transaction1() {
-    let trans0 = Transaction {
-        id: String::new(),
-        reference: String::new(),
-        amount: 0,
-        additionalinfo: String::new(),
-        returnurl: String::new(),
-        resulturl: String::new(),
-        authemail: String::new(),
-        tokenize: false,
-        merchanttrace: String::new(),
-        status: Status::Message,
-        // Extra requrements for Express or Mobile
-        method: PaymentMethod::Other,
-        phone: String::new(),
-        cardnumber: String::new(), //numeric
-        cardname: String::new(),
-        cardcvv: String::new(),
-        cardexpiry: String::new(),
-        billingline1: String::new(),
-        billingline2: String::new(),
-        billingcity: String::new(),
-        billingprovince: String::new(),
-        billingcountry: String::new(),
-        token: String::new(),
-        hash: String::new(),
-        index: 0usize,
-    };
 
-    assert_eq!(trans0, Transaction::new());
-}
-
-#[test]
-fn init_formats() {
+    #[test]
+    fn init_formats() {
         let mut trxn_basic: Transaction = Transaction {
             id: String::from("7"),
             reference: String::from("001"),
@@ -385,22 +363,21 @@ fn init_formats() {
             hash: String::new(), // generated by hash generator
             index: 0usize,
         };
-        
-        
-            let initialisetxn: String = format!("{}", "id=7&reference=001&amount=100&additionalinfo=test+transcation&returnurl=http://www.merchant.com/api&resulturl=http://www.merchant.com/req&authemail=anon@buy.com&tokenize=false&merchanttrace=&status=Message&hash=");
-        
+
+        let initialisetxn: String = format!("{}", "id=7&reference=001&amount=100&additionalinfo=test+transcation&returnurl=http://www.merchant.com/api&resulturl=http://www.merchant.com/req&authemail=anon@buy.com&tokenize=false&merchanttrace=&status=Message&hash=");
+
         let initialiseecocash = String::from("id=7&reference=001&amount=100&additionalinfo=test+transcation&returnurl=http://www.merchant.com/api&resulturl=http://www.merchant.com/req&authemail=anon@buy.com&tokenize=false&merchanttrace=&status=Message&method=ecocash&phone=0777100100&hash=");
-            
-        let initialisemcard = String::from("id=7&reference=001&amount=100&additionalinfo=test+transcation&returnurl=http://www.merchant.com/api&resulturl=http://www.merchant.com/req&authemail=anon@buy.com&tokenize=false&merchanttrace=&status=Message&method=vmc&phone=0777100100&cardnumber=4000-1000-1000-1000&cardname=not+ginimbi&cardcvv=442&cardexpiry=09/23&billingline1=ipapo&billingline2=&billingcity=Harare&billingprovince=Harare+Metropolitant&billingcountry=ZW&token=XTK100&hash=" ) ; 
-            
+
+        let initialisemcard = String::from("id=7&reference=001&amount=100&additionalinfo=test+transcation&returnurl=http://www.merchant.com/api&resulturl=http://www.merchant.com/req&authemail=anon@buy.com&tokenize=false&merchanttrace=&status=Message&method=vmc&phone=0777100100&cardnumber=4000-1000-1000-1000&cardname=not+ginimbi&cardcvv=442&cardexpiry=09/23&billingline1=ipapo&billingline2=&billingcity=Harare&billingprovince=Harare+Metropolitant&billingcountry=ZW&token=XTK100&hash=" ) ;
+
         let initialiseonemoney = String::from("id=7&reference=001&amount=100&additionalinfo=test+transcation&returnurl=http://www.merchant.com/api&resulturl=http://www.merchant.com/req&authemail=anon@buy.com&tokenize=false&merchanttrace=&status=Message&method=onemoney&phone=0777100100&hash=");
-        
+
         let initialisetelecash = String::from("id=7&reference=001&amount=100&additionalinfo=test+transcation&returnurl=http://www.merchant.com/api&resulturl=http://www.merchant.com/req&authemail=anon@buy.com&tokenize=false&merchanttrace=&status=Message&method=telecash&phone=0777100100&hash=");
 
         //         assert_eq!(trxn_basic.init(), String::from("id=7&reference=001&amount=001") )
-        assert_eq!(trxn_basic.init(), initialisetxn );
+        assert_eq!(trxn_basic.init(), initialisetxn);
         trxn_basic.method = PaymentMethod::Ecocash;
-        assert_eq!(trxn_basic.init(), initialiseecocash );
+        assert_eq!(trxn_basic.init(), initialiseecocash);
         trxn_basic.method = PaymentMethod::OneMoney;
         assert_eq!(trxn_basic.init(), initialiseonemoney);
         trxn_basic.method = PaymentMethod::Telecash;
@@ -409,13 +386,10 @@ fn init_formats() {
         // visa or mastercard should give method value : 'vmc' always
         // which implies visa <=> mastercard
         assert_eq!(trxn_basic.init(), initialisemcard);
-        
-}
+    }
 
-
-#[test]
-fn iter_trxn() {
-
+    #[test]
+    fn iter_trxn() {
         let mut trxn1: Transaction = Transaction {
             id: String::from("7"),
             reference: String::from("001"),
@@ -443,37 +417,42 @@ fn iter_trxn() {
             hash: String::new(), // generated by hash generator
             index: 0usize,
         };
-        
-        // gotta test every field , tjo!!
-        assert_eq!(trxn1.next(),Some(String::from("7")) );
-        assert_eq!(trxn1.next(),Some(String::from("001")) );
-        assert_eq!(trxn1.next(),Some(String::from("100")) ); // needs work in Transaction money 
-        assert_eq!(trxn1.next(),Some(String::from("lorem test some")) );
-        assert_eq!(trxn1.next(),Some(String::from("http://www.merchant.com/api")) );
-        assert_eq!(trxn1.next(),Some(String::from("http://www.merchant.com/reply")) );
-        assert_eq!(trxn1.next(),Some(String::from("anon@buy.com")) );
-        assert_eq!(trxn1.next(),Some(String::from("false")) );
-        assert_eq!(trxn1.next(),Some(String::new()) );
-        assert_eq!(trxn1.next(),Some(String::from("Message")) );
-        assert_eq!(trxn1.next(),Some(String::new()) );
-        assert_eq!(trxn1.next(),Some(String::from("0777100100")) );
-        assert_eq!(trxn1.next(),Some(String::from("4000-1000-1000-1000")) );
-        assert_eq!(trxn1.next(),Some(String::from("not ginimbi")) );
-        assert_eq!(trxn1.next(),Some(String::from("442")) );
-        assert_eq!(trxn1.next(),Some(String::from("09/23")) );
-        assert_eq!(trxn1.next(),Some(String::from("ipapo")) );
-        assert_eq!(trxn1.next(),Some(String::new()) );
-        assert_eq!(trxn1.next(),Some(String::from("Harare")) );
-        assert_eq!(trxn1.next(),Some(String::from("Harare Metropolitan")) );
-        assert_eq!(trxn1.next(),Some(String::from("ZW")) );
-        assert_eq!(trxn1.next(),Some(String::from("XTK100")) );
-        assert_eq!(trxn1.next(),Some(String::new()) );
-        assert_eq!(trxn1.next(),None );
-        
-}
 
-#[test]
-fn getters() {
+        // gotta test every field , tjo!!
+        assert_eq!(trxn1.next(), Some(String::from("7")));
+        assert_eq!(trxn1.next(), Some(String::from("001")));
+        assert_eq!(trxn1.next(), Some(String::from("100"))); // needs work in Transaction money
+        assert_eq!(trxn1.next(), Some(String::from("lorem test some")));
+        assert_eq!(
+            trxn1.next(),
+            Some(String::from("http://www.merchant.com/api"))
+        );
+        assert_eq!(
+            trxn1.next(),
+            Some(String::from("http://www.merchant.com/reply"))
+        );
+        assert_eq!(trxn1.next(), Some(String::from("anon@buy.com")));
+        assert_eq!(trxn1.next(), Some(String::from("false")));
+        assert_eq!(trxn1.next(), Some(String::new()));
+        assert_eq!(trxn1.next(), Some(String::from("Message")));
+        assert_eq!(trxn1.next(), Some(String::new()));
+        assert_eq!(trxn1.next(), Some(String::from("0777100100")));
+        assert_eq!(trxn1.next(), Some(String::from("4000-1000-1000-1000")));
+        assert_eq!(trxn1.next(), Some(String::from("not ginimbi")));
+        assert_eq!(trxn1.next(), Some(String::from("442")));
+        assert_eq!(trxn1.next(), Some(String::from("09/23")));
+        assert_eq!(trxn1.next(), Some(String::from("ipapo")));
+        assert_eq!(trxn1.next(), Some(String::new()));
+        assert_eq!(trxn1.next(), Some(String::from("Harare")));
+        assert_eq!(trxn1.next(), Some(String::from("Harare Metropolitan")));
+        assert_eq!(trxn1.next(), Some(String::from("ZW")));
+        assert_eq!(trxn1.next(), Some(String::from("XTK100")));
+        assert_eq!(trxn1.next(), Some(String::new()));
+        assert_eq!(trxn1.next(), None);
+    }
+
+    #[test]
+    fn getters() {
         let trxn2: Transaction = Transaction {
             id: String::from("7"),
             reference: String::from("001"),
@@ -501,23 +480,21 @@ fn getters() {
             hash: String::new(), // generated by hash generator
             index: 0usize,
         };
-        
-        
+
         assert_eq!(trxn2.get_id(), String::from("7"));
         assert_eq!(trxn2.get_reference(), String::from("001"));
         assert_eq!(trxn2.get_amount(), 100u64);
         assert_eq!(trxn2.get_additionalinfo(), String::from("lorem test some"));
+    }
 
-}
+    #[test]
+    fn loading() {
+        let mut tr = Transaction::new();
+        let form: HashMap<_, _> = HashMap::new();
 
-#[test]
-fn loading() {
-    let mut tr = Transaction::new();
-    let form: HashMap<_,_> = HashMap::new();
-    
-    
-        assert_eq!(format!("{:?}",tr.load(&form)), format!("Err(\"no data in hashmap\")", ));
-
-}
-    
+        assert_eq!(
+            format!("{:?}", tr.load(&form)),
+            format!("Err(\"no data in hashmap\")",)
+        );
+    }
 }

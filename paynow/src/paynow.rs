@@ -13,7 +13,6 @@ OF USE, DATA OR PROFITS, WHETHER IN AN ACTION OF CONTRACT, NEGLIGENCE OR OTHER T
 OUT OF OR IN CONNECTION WITH THE USE OR PERFORMANCE OF THIS SOFTWARE.
 */
 
-
 // FOR FUTURE FEATURES
 // use hyper::Request;
 // use reqwest::Client;
@@ -24,7 +23,6 @@ use crate::transactions::Transaction;
 use crate::utils;
 use std::collections::HashMap;
 use std::num::ParseFloatError;
-
 
 type InitRequest = String;
 
@@ -59,7 +57,7 @@ impl Paynow {
         // what now
     }
 
-    // Setters 
+    // Setters
 
     pub fn set_integration_id(&mut self, integration_id: &str) {
         self.integration_id = integration_id.to_string();
@@ -68,30 +66,29 @@ impl Paynow {
         self.integration_key = integration_key.to_string();
     }
 
-    pub fn set_resulturl(&mut self, resulturl: &str){
+    pub fn set_resulturl(&mut self, resulturl: &str) {
         self.resulturl = resulturl.to_string()
     }
 
-    pub fn set_returnurl(&mut self, returnurl: &str){
+    pub fn set_returnurl(&mut self, returnurl: &str) {
         self.returnurl = returnurl.to_string()
     }
 
     pub fn tokenize(&mut self, tokenize: bool) {
-        self.tokenize = tokenize; 
+        self.tokenize = tokenize;
     }
 
-
-
-    /// Create New Instance of Payment handler / helper 
+    /// Create New Instance of Payment handler / helper
     pub fn create_payment(&mut self, reference: &str, auth_email: &str) -> Payment {
         let mut trxn = Transaction::new();
         trxn.set_reference(reference);
         trxn.set_authemail(auth_email);
-        Payment{transaction: trxn, ..Default::default()}
-
+        Payment {
+            transaction: trxn,
+            ..Default::default()
+        }
     }
 
-   
     /// Purpose: to send or initialise a payment request to Paynow API
     pub fn send(&self, _payment: Payment) -> InitRequest {
         //initiate new clients and send req
@@ -102,10 +99,9 @@ impl Paynow {
     /// Change payment mode/type to mobile,
     /// works something like paynow.mobile("0777000000", "onemoney").send(payment)
     pub fn mobile(&self, _phone: &str, _method: &str) {
-    // auth email is mandatory
+        // auth email is mandatory
         unimplemented!()
     }
-
 }
 
 /// Payments Handler Type
@@ -119,17 +115,16 @@ pub struct Payment {
 }
 
 impl Payment {
-    pub fn new()  -> Self {
+    pub fn new() -> Self {
         let payment = Default::default();
         payment
     }
 
-    
-    /// Add item to trolley 
+    /// Add item to trolley
     // Paynow recommends max of two decimal places for amounts
     pub fn add(&mut self, item: &'static str, price: &str) -> Result<(), ParseFloatError> {
         // we want to store all amounts in memory in cents
-        // 
+        //
         // parse to cents
         self.items.insert(item, utils::to_cents(price).unwrap());
         Ok(())
@@ -152,13 +147,11 @@ impl Payment {
     // need to get polls status.....
 }
 
-
 #[cfg(test)]
 mod tests {
     #[test]
     fn describe_test() {
-    // Prove that 1 ->  ~2 
-        assert_eq!(1 , 1);
+        // Prove that 1 ->  ~2
+        assert_eq!(1, 1);
     }
 }
-
