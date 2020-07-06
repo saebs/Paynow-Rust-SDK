@@ -65,9 +65,9 @@ impl Transaction {
     }
     pub fn set_method(&mut self, method: &str) {
         let pmt: PaymentMethod = match &method.to_lowercase()[..] {
-            "econet" => PaymentMethod::Ecocash,
-            "onemoney" => PaymentMethod::OneMoney,
-            "telecash" => PaymentMethod::Telecash,
+            "econet" | "ecocash" => PaymentMethod::Ecocash,
+            "onemoney" | "netone" | "one money" => PaymentMethod::OneMoney,
+            "telecash" | "telecel" => PaymentMethod::Telecash,
             "visa" => PaymentMethod::Visa,
             "mastercard" => PaymentMethod::MasterCard,
             _ => PaymentMethod::Other,
