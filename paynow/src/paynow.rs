@@ -23,6 +23,8 @@ use crate::transactions::Transaction;
 use crate::utils;
 use std::collections::HashMap;
 use std::num::ParseFloatError;
+use rusty_money::{money, Money, Currency};
+use rusty_money::Iso::*; 
 
 type InitRequest = String;
 
@@ -110,7 +112,7 @@ impl Paynow {
 #[derive(Default, Debug, PartialEq)]
 pub struct Payment {
     // basket or trolley goods  'description and amount
-    items: HashMap<&'static str, usize>,
+    items: HashMap<&'static str, Money>,
     transaction: Transaction,
 }
 
@@ -123,10 +125,9 @@ impl Payment {
     /// Add item to trolley
     // Paynow recommends max of two decimal places for amounts
     pub fn add(&mut self, item: &'static str, price: &str) -> Result<(), ParseFloatError> {
-        // we want to store all amounts in memory in cents
-        //
-        // parse to cents
-        self.items.insert(item, utils::to_cents(price).unwrap());
+        // parse to Money 
+        // you need to handle the user input
+        self.items.insert(item, money!(price, "USD"));
         Ok(())
     }
 
@@ -137,9 +138,10 @@ impl Payment {
 
     /// Shopping total
     #[allow(dead_code)]
-    fn total(&mut self) -> usize {
-        let mut amt = 0;
+    fn total(&mut self) -> Money {
+        let mut amt = money!(0, "USD");
         for i in self.items.values() {
+            let sub = Money::new(0, Currency::get(USD)) + i;
             amt += i;
         }
         amt
